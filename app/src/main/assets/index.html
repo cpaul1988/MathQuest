@@ -197,7 +197,7 @@
             <button class="small-btn" onclick="exportBackup()">Export backup</button>
             <button class="small-btn" onclick="document.getElementById('backup-input').click()">Restore backup</button>
             <input id="backup-input" type="file" accept="application/json,.json" hidden onchange="importBackup(this)">
-            <button class="small-btn" onclick="showPrivacy()">Privacy &amp; family rewards</button><p style="font-size:.85em">Parent: set up this device’s PIN before children play. This is a household control, not a secure online account.</p>
+            <button class="small-btn" onclick="openParentAccount()">Parent account &amp; cloud save</button><button class="small-btn" onclick="showPrivacy()">Privacy &amp; family rewards</button><p style="font-size:.85em">Parent: set up this device’s PIN before children play. This is a household control, not a secure online account.</p>
             
             <select id="math-operation" class="op-select">
                 <option value="multiplication">✖️ Multiplication (x)</option>
@@ -253,7 +253,7 @@
         </div>
     </div>
     <div id="tasks-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>🎯 Daily tasks</h2><div id="daily-missions"></div><p id="badge-notice" aria-live="polite"></p><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
-    <div id="game-menu-modal" class="modal-overlay hidden"><div class="modal"><h2>Game options</h2><button class="modal-btn btn-parent-action" id="update-button" onclick="AndroidGame.checkUpdates()">Check for updates</button><button class="modal-btn btn-parent-action" onclick="AndroidGame.exportDiagnostics()">Export error report</button><button class="modal-btn btn-parent-action" onclick="showPrivacy()">Privacy &amp; family rewards</button><button class="modal-btn btn-parent-action" onclick="exportBackup()">Export progress backup</button><small>Math Quest <span id="native-version">1.0.0</span> • Progress stays on this device</small><p id="reward-rule-summary"></p><div id="sync-status"></div><button class="modal-btn btn-parent-action" onclick="closeModals();toggleReview()" id="review-toggle">Review weak skills</button><button class="modal-btn btn-parent-action" onclick="closeModals();showRequests(false)">Reward requests</button><button class="modal-btn btn-parent-action" onclick="closeModals();openParentPanel()">Parent controls</button><button class="modal-btn btn-parent-action" onclick="logout()">Switch player / mode</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
+    <div id="game-menu-modal" class="modal-overlay hidden"><div class="modal"><h2>Game options</h2><button class="modal-btn btn-parent-action" onclick="openParentAccount()">Parent account &amp; cloud save</button><button class="modal-btn btn-parent-action" onclick="recoverBeforeCloudRestore()">Recover previous device save</button><button class="modal-btn btn-parent-action" id="update-button" onclick="AndroidGame.checkUpdates()">Check for updates</button><button class="modal-btn btn-parent-action" onclick="AndroidGame.exportDiagnostics()">Export error report</button><button class="modal-btn btn-parent-action" onclick="showPrivacy()">Privacy &amp; family rewards</button><button class="modal-btn btn-parent-action" onclick="exportBackup()">Export progress backup</button><small>Math Quest <span id="native-version">1.0.0</span> • Progress stays on this device</small><p id="reward-rule-summary"></p><div id="sync-status"></div><button class="modal-btn btn-parent-action" onclick="closeModals();toggleReview()" id="review-toggle">Review weak skills</button><button class="modal-btn btn-parent-action" onclick="closeModals();showRequests(false)">Reward requests</button><button class="modal-btn btn-parent-action" onclick="closeModals();openParentPanel()">Parent controls</button><button class="modal-btn btn-parent-action" onclick="logout()">Switch player / mode</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
 
     <!-- Cash Out Modal -->
     <div id="cashout-modal" class="modal-overlay hidden">
@@ -337,7 +337,7 @@
     .playing .header-controls{margin-bottom:8px}.playing #parent-btn,.playing #switch-user-btn{display:none}.playing .stats-board{padding:10px;margin-bottom:10px}.playing .stats-top{margin-bottom:5px}.playing .robux-text{display:none}.playing #cashout-btn{padding:7px 10px;font-size:.85em}.playing .progress-bar-container{height:8px;margin-bottom:10px}.playing #session-label{font-size:.8em;margin:8px 0;color:var(--q-color)}
     #quiz-block{padding:8px 0 12px}.playing .question{font-size:clamp(2.4rem,9vw,3.6rem);margin:10px 0 20px;line-height:1.15}.game-tools{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-top:1px solid var(--q-color);padding-top:12px;margin-top:12px}.game-tools button{margin:0;font-size:.8em;padding:10px 4px}.playing #message{font-size:1em;min-height:0;margin:6px 0}.playing #typed-form{margin:0}.playing #typed-answer{box-sizing:border-box;width:100%;font-size:1.5em;margin:10px 0}.playing #typed-submit{margin:0}.playing #next-btn{font-size:1.15em;padding:12px}.playing .option-btn{font-size:1.8em;padding:17px 10px}
     </style>
-    <div id="privacy-modal" class="modal-overlay hidden"><div class="modal"><h2>Privacy &amp; family rewards</h2><p>We never send promotional emails.</p><p>This version saves player names, learning progress, reward rules, requests and parent email addresses on this device. Online accounts and cloud syncing are not enabled yet. Use nicknames rather than children's full names.</p><p>Reward emails open in your email app and are sent only when you press Send. Parents supply all rewards. MathQuest does not pay cash, supply Robux, or have an affiliation with Roblox.</p><p>The GitHub edition contacts GitHub to check for and download updates. The Play edition uses Google Play for updates. Those services receive normal network information such as your IP address. Diagnostics stay on your device unless you export and share them.</p><p>Backups include parent email addresses and the device PIN. Keep them private. There are no ads or advertising analytics in this app.</p><button class="modal-btn btn-parent-action" onclick="eraseDeviceData()">Parent: erase this device's progress</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
+    <div id="privacy-modal" class="modal-overlay hidden"><div class="modal"><h2>Privacy &amp; family rewards</h2><p>We never send promotional emails.</p><p>This version saves player names, learning progress, reward rules, requests and parent email addresses on this device. An optional parent account uses Firebase to store your email and password authentication. Parent account offers manual cloud save and restore after email verification. Each upload needs confirmation and includes all household profiles and reward information, but excludes the device PIN. Local changes are not uploaded automatically. We use no promotional emails. Account deletion is available in Parent account; a minimal deletion marker remains to block old sessions from recreating data. Local copies and exported files must be erased separately. Use nicknames rather than children's full names.</p><p>Reward emails open in your email app and are sent only when you press Send. Parents supply all rewards. MathQuest does not pay cash, supply Robux, or have an affiliation with Roblox.</p><p>The GitHub edition contacts GitHub to check for and download updates. The Play edition uses Google Play for updates. Those services receive normal network information such as your IP address. Diagnostics stay on your device unless you export and share them.</p><p>Backups include parent email addresses and the device PIN. Keep them private. There are no ads or advertising analytics in this app.</p><button class="modal-btn btn-parent-action" onclick="eraseDeviceData()">Parent: erase this device's progress</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
     <div id="recovery-modal" class="modal-overlay hidden"><div class="modal"><h2>Let’s get you playing again</h2><p id="recovery-text">Something interrupted the game. Your last saved progress has not been erased.</p><button class="modal-btn btn-confirm" onclick="location.reload()">Reload saved game</button><button class="modal-btn btn-cancel" onclick="AndroidGame.exportDiagnostics()">Save error report</button></div></div>
     <script>
         function recordFault(code){try{if(window.AndroidGame)AndroidGame.recordError(code);}catch(ignore){}}
@@ -536,7 +536,7 @@
             document.getElementById('parent-target-user').innerText=currentUser;
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('game-screen').classList.remove('hidden');document.body.classList.add('playing');
-            document.getElementById('sync-status').innerText='Saved on this device • No cloud sync';
+            document.getElementById('sync-status').innerText='Saved on this device • Use Parent account for cloud save/restore';
             document.getElementById('message').innerText='';
             updateStats(false); generateRandomQuestion(); try {initAudio();} catch(e) {}
         }
@@ -892,9 +892,45 @@
         }
         function showPrivacy(){closeModals();document.getElementById('privacy-modal').classList.remove('hidden');}
         function eraseDeviceData(){
+            if(window.AndroidGame&&typeof AndroidGame.accountBusy==='function'&&AndroidGame.accountBusy()){alert('Wait for the account action to finish before erasing device data.');return;}
             if(!authorizeParent())return;
             if(!confirm('Erase ALL player profiles, progress, parent emails and reward requests on this device? Export a backup first if you want to keep them. This cannot be undone.'))return;
-            const previous=db;db=freshDB();if(persist()){logout();alert('Device progress erased. Exported backup files are not deleted.');}else{db=previous;}
+            try{localStorage.removeItem('mqBeforeCloudRestore');localStorage.removeItem('mqCloudRevision');}catch(e){alert('Could not erase recovery data. Try again.');return;}
+            const previous=db;db=freshDB();if(persist()){accountSnapshot=null;if(window.AndroidGame&&typeof AndroidGame.signOutAccount==='function')AndroidGame.signOutAccount();logout();alert('Device progress erased. Exported backup files are not deleted.');}else{db=previous;}
+        }
+        let accountSnapshot = null;
+        function cloudPayload(){const copy=JSON.parse(JSON.stringify(db));delete copy.pin;return JSON.stringify(copy);}
+        function openParentAccount(){
+            if(!authorizeParent())return;
+            if(!window.AndroidGame || typeof AndroidGame.parentAccount!=='function'){alert('Parent accounts are available in the Android app.');return;}
+            closeModals();accountSnapshot=storedRaw;
+            try{AndroidGame.parentAccount(cloudPayload(),localStorage.getItem('mqCloudRevision')||'{}');}
+            catch(e){alert('Parent account is unavailable. Your local progress is safe.');}
+        }
+        window.onParentAccount=function(event){
+            try{
+                if(!event||!['saved','restore','signedIn','signedOut','deleted'].includes(event.type))return;
+                if(['signedOut','deleted'].includes(event.type)){accountSnapshot=null;localStorage.removeItem('mqCloudRevision');return;}
+                if(event.type==='signedIn'||accountSnapshot===null)return;
+                if(typeof event.uid!=='string'||!event.uid||!Number.isSafeInteger(event.revision)||event.revision<1)throw Error('Invalid cloud metadata');
+                if(event.type==='restore'){
+                    if(storageFailed||storedRaw!==accountSnapshot||localStorage.getItem(STORE_KEY)!==accountSnapshot)throw Error('Device progress changed. Open Parent account again before restoring.');
+                    if(typeof event.payload!=='string'||event.payload.length>650000)throw Error('Invalid cloud save');
+                    const incoming=JSON.parse(event.payload);if(Object.hasOwn(incoming,'pin'))throw Error('Invalid cloud save');incoming.pin=db.pin;validateDB(incoming);
+                    localStorage.setItem('mqBeforeCloudRestore',storedRaw);
+                    const previous=db;db=incoming;if(!persist()){db=previous;throw Error('Restore did not finish.');}
+                    logout();alert('Cloud progress restored. Your previous device save is available under More → Recover previous device save.');
+                }
+                localStorage.setItem('mqCloudRevision',JSON.stringify({uid:event.uid,revision:event.revision}));
+            }catch(e){alert('Cloud action could not finish: '+e.message+' Local and recovery copies have not been intentionally erased.');}
+        };
+        function recoverBeforeCloudRestore(){
+            if(!authorizeParent())return;
+            try{const raw=localStorage.getItem('mqBeforeCloudRestore');if(!raw){alert('No recovery copy is available.');return;}
+                const incoming=JSON.parse(raw);validateDB(incoming);incoming.pin=db.pin;
+                if(!confirm('Replace current device progress with the save from before the last cloud restore?'))return;
+                const previous=db;db=incoming;if(persist()){localStorage.removeItem('mqCloudRevision');logout();alert('Previous device progress recovered.');}else db=previous;
+            }catch(e){alert('Recovery failed. Current progress is preserved.');}
         }
         function showTasks(){renderLearning();document.getElementById('tasks-modal').classList.remove('hidden');}
         function openGameMenu(){document.getElementById('game-menu-modal').classList.remove('hidden');}

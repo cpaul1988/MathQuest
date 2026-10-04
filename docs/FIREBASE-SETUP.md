@@ -16,18 +16,30 @@ Checked 2026-10-04. This is infrastructure setup, not a released accounts featur
 - Scheduled Firestore backups were not enabled because they require Blaze.
 - No parent accounts or household progress have been uploaded by this setup.
 
-## Current blocker
+## Android integration candidate — 1.1.0-beta.1
 
-The Android configuration download did not complete through the setup wizard or the registered-app settings page. Obtain `google-services.json` from Firebase Console → Project settings → General → MathQuest Android before integrating the SDK. Confirm the project ID and Android package match this checkpoint. This is client configuration; do not substitute a service-account private key.
+The owner supplied `google-services.json`; project ID, app ID and package were validated. It is non-secret client configuration, not an administrative credential. The SDK uses Firebase BoM 34.19.0, Authentication and Firestore only; no Analytics SDK. AGP 8.13.2 and Gradle 8.13 support the Kotlin metadata used by the current Firebase SDK.
 
-## Next implementation gates
+Implemented behind the device Parent PIN:
+- Native parent email/password signup and sign-in; password fields stay outside WebView JavaScript. Signup requires the adult notice and a 12-character password in the client.
+- Verification emails, verification refresh, password reset and signout.
+- Explicit cloud Save and Restore actions. These are manual transfers, not continuous/background syncing. Gameplay saves remain local automatically.
+- Cloud uploads exclude the device PIN. Parents confirm uploading all profiles, learning history, reward balances/rules/requests and parent reward emails.
+- First connection never replaces device data. Transactions reject mismatching revisions. On a conflict, export the device save before restoring the cloud copy. Balances are not merged.
+- Remote JSON is validated before restore. A changed local save aborts an in-flight restore. A local recovery snapshot is saved before replacement; the current device PIN stays in place.
+- Native account/cloud deletion reauthenticates and writes an empty deletion marker before deleting the Auth user. The marker blocks stale tokens from recreating progress; retry deletion if login removal fails. Local device saves, recovery snapshots, exports and emails require separate deletion. Device erasure waits for in-flight account work, then signs out the parent account.
+- Firestore uses memory-only caching; cloud transfer reads require the server. Network failures do not replace local progress.
 
-1. Add native Firebase email/password sign-in, email verification, reset and reauthentication. Keep passwords out of WebView JavaScript and local progress backups.
-2. Use explicit parent opt-in before uploading household data; exclude the local PIN. Keep local play and export available without an account.
-3. Implement owner-only verified-account rules with schema/size limits and optimistic revision checks. Test unauthorized, unverified, cross-account, stale-revision and deletion cases before deploying those rules. Do not use open test-mode rules.
-4. Require a deliberate upload/restore choice on first connection. Preserve local progress on login, account changes, network failures and conflicts. Never merge reward balances by addition.
-5. Implement account/data deletion with reauthentication and protection against stale-session recreation. Provide an external deletion route before a Play release with signup.
-6. Update privacy text and Data safety documentation to match the actual feature. Supply a public support contact and complete the children's privacy review before commercial release.
-7. Validate the native integration, real-device offline recovery and two-device conflicts. Publish a new signed GitHub version only after these checks pass.
+## Deployment status
 
-MathQuest 1.0.1 remains the current GitHub release. Its local saves and update channel are unchanged. Signup and cloud sync are not included in that APK; the Play bundle remains a preparation candidate.
+Production Firestore still uses deny-all rules. `firebase/firestore.rules` is the reviewed candidate. Publishing it is a security-sensitive access change and awaits action-time confirmation. No real signup/verification/reset emails or parent cloud records were created during tests.
+
+The candidate is kept on `feature/parent-accounts`, without promoting a GitHub update or submitting to Play. Before promotion, deploy the rules and exercise signup, verification, password reset, cloud save/restore on two Android devices, conflict recovery, deletion retry and a signed upgrade from 1.0.1.
+
+Google Play remains blocked on the public support/privacy contact, a public account-deletion route, children's privacy/consent review, store declarations/assets and required device/closed testing. A parent checkbox is not verified parental consent. No paid billing upgrade or Play purchase has been made.
+
+## Validation
+
+- `npm test`: actual game controls plus parent gate, PIN exclusion, login preservation, malformed/PIN-bearing/stale restore rejection, recovery, revision tracking, signout and local erase.
+- `npm run test:rules` (JDK 21): real Firestore emulator tests for authentication, household isolation, verification, schema, size, revisions, timestamps, recent-auth deletion and tombstone protection. Uses only `demo-mathquest`; no production access.
+- Build/lint GitHub APK and Play AAB with JDK 17; verify distribution manifests separately.

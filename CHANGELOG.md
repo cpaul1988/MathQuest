@@ -1,3 +1,13 @@
+Math Quest 1.1.0-beta.1 — parent account candidate (not promoted)
+
+- Add native parent email/password accounts, verification, reset and signout. No promotional emails.
+- Add opt-in manual cloud Save/Restore with revision conflict detection, PIN exclusion and a local recovery copy.
+- Add reauthenticated account/cloud deletion with stale-session protection.
+- Keep offline gameplay and automatic local saving. Cloud transfers require parent action.
+- Add Firebase emulator security tests and cloud-restore regression tests.
+- Upgrade Android build tooling for current Firebase SDK compatibility.
+- Production rules deployment, real-device validation and Play requirements remain pending.
+
 Math Quest 1.0.1 — Google Play preparation
 
 - Target Android 16 / API 36 and handle modern Android back navigation.

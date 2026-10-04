@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
     private ValueCallback<Uri[]> fileCallback;
     private String pendingExport;
     private DistributionUpdater updater;
+    private ParentAccount parentAccount;
     private final Set<String> allowedCodes=new HashSet<>(Arrays.asList("SCRIPT_ERROR","PROMISE_ERROR","SAVE_ERROR","LOAD_ERROR","IMPORT_ERROR","NATIVE_ERROR","UPDATE_ERROR"));
 
     @Override public void onCreate(Bundle state) {
@@ -51,10 +52,14 @@ public class MainActivity extends Activity {
         });
         updater=new DistributionUpdater(this,io,this::log,this::showMessage);
         web.addJavascriptInterface(new GameBridge(),"AndroidGame");web.loadUrl(HOME);
+        try{parentAccount=new ParentAccount(this,event->web.evaluateJavascript("window.onParentAccount("+event+")",null));}catch(Exception e){log("NATIVE_ERROR","AccountInit");}
         updater.onLaunch();
         if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::handleBack);
     }
     public class GameBridge {
+        @JavascriptInterface public boolean accountBusy(){return parentAccount!=null&&parentAccount.isBusy();}
+        @JavascriptInterface public void signOutAccount(){runOnUiThread(()->{if(parentAccount!=null)parentAccount.signOutFromDevice();});}
+        @JavascriptInterface public void parentAccount(String payload,String metadata){if(payload==null||metadata==null||payload.length()>650000||metadata.length()>2000)return;runOnUiThread(()->{if(parentAccount!=null)parentAccount.open(payload,metadata);else showMessage("Account unavailable","You can keep playing locally. Reopen the app and try again.");});}
         @JavascriptInterface public String distribution(){return BuildConfig.FLAVOR;}
         @JavascriptInterface public String versionName(){return BuildConfig.VERSION_NAME;}
         @JavascriptInterface public void checkUpdates(){runOnUiThread(()->updater.checkUpdates(true));}
@@ -68,7 +73,9 @@ public class MainActivity extends Activity {
     private synchronized void log(String code,String kind){try{File f=new File(getFilesDir(),"diagnostics.txt");String old=f.exists()?new String(java.nio.file.Files.readAllBytes(f.toPath()),StandardCharsets.UTF_8):"";if(old.length()>12000)old=old.substring(old.length()-8000);try(FileOutputStream out=new FileOutputStream(f)){out.write((old+System.currentTimeMillis()+" "+code+" "+kind.replaceAll("[^A-Za-z0-9_$]","")+"\n").getBytes(StandardCharsets.UTF_8));}}catch(Exception ignored){}}
     private void showMessage(String title,String text){runOnUiThread(()->{if(!isFinishing()&&!isDestroyed())new AlertDialog.Builder(this).setTitle(title).setMessage(text).setPositiveButton("OK",null).show();});}
     @Override protected void onResume(){super.onResume();if(updater!=null)updater.onResume();}
+    // Legacy API 26–32 path. API 33+ uses the OnBackInvokedDispatcher registered in onCreate.
+    @android.annotation.SuppressLint("GestureBackNavigation")
     @Override public void onBackPressed(){handleBack();}
     private void handleBack(){web.evaluateJavascript("(function(){const opened=[...document.querySelectorAll(\".modal-overlay\")].some(x=>!x.classList.contains(\"hidden\"));if(opened)closeModals();return opened;})()",value->{if("false".equals(value))finish();});}
-    @Override protected void onDestroy(){if(fileCallback!=null)fileCallback.onReceiveValue(null);if(web!=null){web.removeJavascriptInterface("AndroidGame");web.destroy();}io.shutdown();super.onDestroy();}
+    @Override protected void onDestroy(){if(parentAccount!=null)parentAccount.close();if(fileCallback!=null)fileCallback.onReceiveValue(null);if(web!=null){web.removeJavascriptInterface("AndroidGame");web.destroy();}io.shutdown();super.onDestroy();}
 }
