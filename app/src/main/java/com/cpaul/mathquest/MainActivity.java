@@ -27,6 +27,9 @@ public class MainActivity extends Activity {
     private String pendingExport;
     private DistributionUpdater updater;
     private ParentAccount parentAccount;
+    private android.speech.tts.TextToSpeech speech;
+    private boolean speechReady;
+    private String pendingSpeech;
     private final Set<String> allowedCodes=new HashSet<>(Arrays.asList("SCRIPT_ERROR","PROMISE_ERROR","SAVE_ERROR","LOAD_ERROR","IMPORT_ERROR","NATIVE_ERROR","UPDATE_ERROR"));
 
     @Override public void onCreate(Bundle state) {
@@ -57,6 +60,7 @@ public class MainActivity extends Activity {
         if(Build.VERSION.SDK_INT>=33)getOnBackInvokedDispatcher().registerOnBackInvokedCallback(android.window.OnBackInvokedDispatcher.PRIORITY_DEFAULT,this::handleBack);
     }
     public class GameBridge {
+        @JavascriptInterface public void speakQuestion(String text){if(text!=null&&text.length()<200&&text.matches("[0-9a-zA-Z ×÷+−? .-]+"))runOnUiThread(()->readQuestionAloud(text));}
         @JavascriptInterface public boolean accountBusy(){return parentAccount!=null&&parentAccount.isBusy();}
         @JavascriptInterface public void signOutAccount(){runOnUiThread(()->{if(parentAccount!=null)parentAccount.signOutFromDevice();});}
         @JavascriptInterface public void parentAccount(String payload,String metadata){if(payload==null||metadata==null||payload.length()>650000||metadata.length()>2000)return;runOnUiThread(()->{if(parentAccount!=null)parentAccount.open(payload,metadata);else showMessage("Account unavailable","You can keep playing locally. Reopen the app and try again.");});}
@@ -66,6 +70,16 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void exportBackup(String json){if(json==null||json.length()>5_000_000)return;runOnUiThread(()->exportText(json,"math-quest-backup.json","application/json"));}
         @JavascriptInterface public void exportDiagnostics(){runOnUiThread(()->{try{File f=new File(getFilesDir(),"diagnostics.txt");String text="Math Quest "+BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")\nAndroid API "+Build.VERSION.SDK_INT+"\nNo player data included.\n"+(f.exists()?new String(java.nio.file.Files.readAllBytes(f.toPath()),StandardCharsets.UTF_8):"No errors recorded.");exportText(text,"math-quest-diagnostics.txt","text/plain");}catch(Exception e){showMessage("Export unavailable","Please try again.");}});}
         @JavascriptInterface public void recordError(String code){log(allowedCodes.contains(code)?code:"SCRIPT_ERROR","JavaScript");}
+    }
+    private void readQuestionAloud(String text){
+        pendingSpeech=text;
+        if(speech==null){speech=new android.speech.tts.TextToSpeech(this,status->{
+            if(isFinishing()||isDestroyed())return;
+            speechReady=status==android.speech.tts.TextToSpeech.SUCCESS;
+            if(speechReady){int language=speech.setLanguage(Locale.getDefault());speechReady=language!=android.speech.tts.TextToSpeech.LANG_MISSING_DATA&&language!=android.speech.tts.TextToSpeech.LANG_NOT_SUPPORTED;}
+            if(speechReady)readQuestionAloud(pendingSpeech);else showMessage("Voice unavailable","Enable a text-to-speech voice in Android Settings. You can keep answering normally.");
+        });return;}
+        if(speechReady&&speech.speak(text,android.speech.tts.TextToSpeech.QUEUE_FLUSH,null,"math-question")==android.speech.tts.TextToSpeech.ERROR)showMessage("Voice unavailable","Check Android text-to-speech settings and try again.");
     }
     private void openMail(Uri uri){try{startActivity(new Intent(Intent.ACTION_SENDTO,uri));}catch(ActivityNotFoundException e){showMessage("No email app found","Your reward request is saved. Install an email app, then open the draft again from Reward requests.");}}
     private void exportText(String text,String name,String mime){if(pendingExport!=null){showMessage("Export in progress","Finish the current save first.");return;}pendingExport=text;try{startActivityForResult(new Intent(Intent.ACTION_CREATE_DOCUMENT).setType(mime).addCategory(Intent.CATEGORY_OPENABLE).putExtra(Intent.EXTRA_TITLE,name),12);}catch(ActivityNotFoundException e){pendingExport=null;showMessage("Cannot save file","Enable the Files app and try again.");}}
@@ -77,5 +91,5 @@ public class MainActivity extends Activity {
     @android.annotation.SuppressLint("GestureBackNavigation")
     @Override public void onBackPressed(){handleBack();}
     private void handleBack(){web.evaluateJavascript("(function(){const opened=[...document.querySelectorAll(\".modal-overlay\")].some(x=>!x.classList.contains(\"hidden\"));if(opened)closeModals();return opened;})()",value->{if("false".equals(value))finish();});}
-    @Override protected void onDestroy(){if(parentAccount!=null)parentAccount.close();if(fileCallback!=null)fileCallback.onReceiveValue(null);if(web!=null){web.removeJavascriptInterface("AndroidGame");web.destroy();}io.shutdown();super.onDestroy();}
+    @Override protected void onDestroy(){if(speech!=null){speech.stop();speech.shutdown();}if(parentAccount!=null)parentAccount.close();if(fileCallback!=null)fileCallback.onReceiveValue(null);if(web!=null){web.removeJavascriptInterface("AndroidGame");web.destroy();}io.shutdown();super.onDestroy();}
 }

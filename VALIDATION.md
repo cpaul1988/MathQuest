@@ -26,3 +26,13 @@ The release workflow builds/lints both variants and checks merged manifests for 
 - Production rules were published with owner approval on 2026-10-04 at 2:18 PM America/Chicago and verified as active in Firebase Console. No real email or household upload was sent during validation.
 - Not yet verified: physical Android signup/login/verification/reset, two-device transfers/conflicts, deletion retry, offline recovery and in-place update from 1.0.1. Emulator rule tests do not establish that the native UI or live project is fully tested.
 - No GitHub update promotion and no Google Play submission for this candidate. The public deletion route, public contact, consent/legal review and Play listing/testing work remain pending.
+
+
+## 1.2.0-beta.1 adventure candidate — 2026-10-04
+
+- PASS: game, cloud bridge and adventure regression suites, including format-12 migration to 13, adaptive tiers, explanations, opt-in rewards, guardian completion and accessibility persistence.
+- PASS: clean signed GitHub APK and Play AAB builds; lint for both variants.
+- PASS: distribution isolation; Play has no APK downloader/installer.
+- PASS: APK signature verified against existing signing certificate SHA-256 `14f7671e5649cb5fc9234a3d79c8ee69cd538c3c1fb56d8ef0234b4ecd43197d`.
+- Original compass/book vector icon includes adaptive and monochrome resources.
+- Physical-device upgrade, icon, keyboard, read-aloud and real Firebase account/two-device transfer checks remain pending. Cloud transfers are manual. Candidate is not promoted to automatic updates or Google Play.

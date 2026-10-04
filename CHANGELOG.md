@@ -1,3 +1,15 @@
+MathQuest 1.2.0-beta.1 — learning adventure candidate (not promoted)
+
+- Original compass-and-book Android icon, adaptive and monochrome variants.
+- Adaptive practice tiers, explanations, permanent stars and a six-stop adventure map.
+- Recommended practice, weak-skill missions and untimed mixed guardian challenges.
+- Optional rewards for new players; existing reward rules and balances preserved.
+- Main game focused on questions, stars and streaks; balances and extras behind buttons.
+- Three daily targets, fewer new badge notifications, and recent accuracy/review summaries.
+- Device sound, reduced-motion, larger text and optional read-aloud controls.
+- Save format 13 with migration from format 12. Upgrade both devices before cloud transfer.
+- Manual cloud transfers retained; real-device and Play release gates remain pending.
+
 Math Quest 1.1.0-beta.1 — parent account candidate (not promoted)
 
 - Add native parent email/password accounts, verification, reset and signout. No promotional emails.

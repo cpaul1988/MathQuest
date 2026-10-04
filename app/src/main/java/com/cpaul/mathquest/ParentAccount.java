@@ -42,7 +42,7 @@ final class ParentAccount {
         message("Action could not finish",text);
     }
     void open(String payload,String metadata){if(busy||!live())return;
-        try {JSONObject p=new JSONObject(payload); if(p.has("pin")||p.getInt("version")!=12||!p.has("profiles")||payload.length()>650000)throw new JSONException("payload");}
+        try {JSONObject p=new JSONObject(payload); if(p.has("pin")||p.getInt("version")!=13||!p.has("profiles")||payload.length()>650000)throw new JSONException("payload");}
         catch(Exception e){message("Cloud save unavailable","The save is invalid or too large. Export a device backup instead.");return;}
         snapshot=payload;meta=metadata;
         FirebaseUser user=auth.getCurrentUser();
@@ -74,7 +74,7 @@ final class ParentAccount {
     private void reset(){EditText email=input("Parent email",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         new AlertDialog.Builder(activity).setTitle("Reset password").setView(email).setNegativeButton("Cancel",null).setPositiveButton("Send reset email",(d,w)->{String mail=email.getText().toString().trim();if(mail.isEmpty()){message("Email required","Enter the parent email address and try again.");return;}busy=true;auth.sendPasswordResetEmail(mail).addOnSuccessListener(v->{busy=false;message("Reset requested","If this email has an account, follow the reset email. Check spam too.");}).addOnFailureListener(this::fail);}).show();}
     private void verify(FirebaseUser user){busy=true;user.sendEmailVerification().addOnSuccessListener(v->{busy=false;message("Verification email sent","Open the link in your email, then choose Refresh email verification in Parent account.");}).addOnFailureListener(this::fail);}
-    private void refresh(FirebaseUser user){busy=true;user.reload().continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return user.getIdToken(true);}).addOnSuccessListener(v->{busy=false;message("Email verification",user.isEmailVerified()?"Email verified. Cloud save and restore are available once access rules are deployed.":"Your email is not verified yet. Open the verification email first.");}).addOnFailureListener(this::fail);}
+    private void refresh(FirebaseUser user){busy=true;user.reload().continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return user.getIdToken(true);}).addOnSuccessListener(v->{busy=false;message("Email verification",user.isEmailVerified()?"Email verified. Cloud save and restore are available.":"Your email is not verified yet. Open the verification email first.");}).addOnFailureListener(this::fail);}
     private DocumentReference doc(FirebaseUser user){return cloud.collection("households").document(user.getUid());}
     private boolean verified(FirebaseUser user){if(!user.isEmailVerified()){message("Verify your email first","Open your verification email, then refresh verification in Parent account.");return false;}return true;}
     private Map<String,Object> record(long revision,String state,String payload){Map<String,Object> m=new HashMap<>();m.put("schema",1);m.put("revision",revision);m.put("state",state);m.put("payload",payload);m.put("updatedAt",FieldValue.serverTimestamp());return m;}

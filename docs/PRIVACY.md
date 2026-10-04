@@ -1,4 +1,4 @@
-# MathQuest privacy information — candidate 1.1.0-beta.1
+# MathQuest privacy information — candidate 1.2.0-beta.1
 
 We never send promotional emails.
 
@@ -19,3 +19,5 @@ Firestore uses memory-only SDK caching, and Restore requires a live server respo
 ## Publication status
 
 This describes the parent-account candidate, not the currently published 1.0.1 APK. Owner-only production access rules are deployed; real-device validation of this candidate remains pending. Before Play submission, the developer must supply a public support/privacy contact, publish a stable policy URL, and update this information to describe any enabled account/sync service and its deletion/retention procedures. This document is not a completed Play privacy-policy submission.
+
+Adventure progress includes adaptive practice levels, recent answer windows, guardian completion counts and the chosen profile pin. It travels with parent-approved cloud saves and backups. Sound, motion and text-size preferences stay on the device. Read-aloud sends only the current arithmetic question to the configured Android speech engine; that engine controls voice processing and availability.
