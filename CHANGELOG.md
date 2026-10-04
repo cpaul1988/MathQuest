@@ -1,3 +1,10 @@
+MathQuest 1.2.3 — visible accounts and modern interface
+
+- Visible Sign in, Create parent account and Continue with Google buttons on player setup and gameplay.
+- Direct native account routing with parent PIN protection, signed-in status and offline play retained.
+- Theme-aware cards, rounded controls, clearer typography and refreshed native email forms.
+- Backup utilities grouped behind an expandable section.
+
 MathQuest 1.2.2 — custom milestone rewards
 
 - Parent-PIN protected, per-child custom milestone rewards and on/off toggle.

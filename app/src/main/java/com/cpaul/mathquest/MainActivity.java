@@ -61,6 +61,8 @@ public class MainActivity extends Activity {
     }
     public class GameBridge {
         @JavascriptInterface public void speakQuestion(String text){if(text!=null&&text.length()<200&&text.matches("[0-9a-zA-Z ×÷+−? .-]+"))runOnUiThread(()->readQuestionAloud(text));}
+        @JavascriptInterface public boolean accountSignedIn(){return parentAccount!=null&&parentAccount.isSignedIn();}
+        @JavascriptInterface public void parentAccountAction(String payload,String metadata,String action){if(payload==null||metadata==null||payload.length()>650000||metadata.length()>2000||action==null||!java.util.Arrays.asList("menu","signin","signup","google").contains(action))return;runOnUiThread(()->{if(parentAccount!=null)parentAccount.open(payload,metadata,action);else showMessage("Account unavailable","Keep playing offline and try again later.");});}
         @JavascriptInterface public boolean accountBusy(){return parentAccount!=null&&parentAccount.isBusy();}
         @JavascriptInterface public void signOutAccount(){runOnUiThread(()->{if(parentAccount!=null)parentAccount.signOutFromDevice();});}
         @JavascriptInterface public void parentAccount(String payload,String metadata){if(payload==null||metadata==null||payload.length()>650000||metadata.length()>2000)return;runOnUiThread(()->{if(parentAccount!=null)parentAccount.open(payload,metadata);else showMessage("Account unavailable","You can keep playing locally. Reopen the app and try again.");});}
