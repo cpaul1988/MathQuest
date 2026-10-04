@@ -1,6 +1,6 @@
 # Math Quest for Android
 
-Current channel: **GitHub**. Google Play preparation is underway; this is not yet a store release. See [Play readiness](docs/PLAY-READINESS.md) and [privacy information](docs/PRIVACY.md). The current published APK is 1.0.1. This branch prepares 1.2.0-beta.2 with optional parent accounts and manual cloud Save/Restore; production access rules are deployed and real-device checks are still pending. See [Firebase setup](docs/FIREBASE-SETUP.md).
+Current channel: **GitHub**. Google Play preparation is underway; this is not yet a store release. See [Play readiness](docs/PLAY-READINESS.md) and [privacy information](docs/PRIVACY.md). The current published APK is 1.2.0-beta.2, promoted to the latest GitHub channel at the owner’s request. This branch prepares 1.2.1 with optional parent accounts and manual cloud Save/Restore; production access rules are deployed and real-device checks are still pending. See [Firebase setup](docs/FIREBASE-SETUP.md).
 
 Offline math adventure with optional family rewards. Based on the v13 game; local profiles, streak-based rewards, Easy multiple choice / Hard typed answers, weak-fact review, missions, badges, seasonal worlds and parent reward requests. This is an independent family game, not affiliated with Roblox. Parents supply rewards manually.
 
@@ -72,3 +72,5 @@ The initial signup notice does not upload player data. Cloud uploads require the
 For cloud security tests use JDK 21 and `npm run test:rules`. The Android build uses JDK 17. Feature-branch builds and `-beta.N` versions produce artifacts only; the workflow cannot publish them as the latest release.
 
 See [Adventure update](docs/ADVENTURE-UPDATE.md) for learning behavior, reward defaults, migration and device-testing requirements.
+
+See [Google sign-in and player resume](docs/GOOGLE-AND-RESUME.md) for the 1.2.1 update.

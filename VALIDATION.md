@@ -41,3 +41,13 @@ The release workflow builds/lints both variants and checks merged manifests for 
 ## 1.2.0-beta.2 icon update — 2026-10-04
 
 Selected Number Challenge artwork replaces launcher and player-selection artwork. Clean GitHub APK and Play AAB builds and both lint variants passed. Distribution isolation and original signing certificate verified. Embedded WebP decoded successfully. Gameplay and save schema unchanged; prior physical-device testing requirements remain.
+
+
+## 1.2.1 Google setup and profile resume — 2026-10-04
+
+- PASS all game, cloud bridge, adventure and player restart regression suites.
+- PASS clean GitHub APK / Play AAB and both lint variants after Google configuration.
+- PASS generated default_web_client_id matches Firebase’s public web client in both variants.
+- PASS distribution isolation and APK signature against existing release certificate.
+- Firebase Google provider enabled with owner approval; SHA-1 and SHA-256 release fingerprints verified in Console. Billing remains Spark.
+- Native Google account chooser, account linking/deletion and phone upgrade still need physical-device checks. No real account signup, deletion or cloud upload performed during validation.

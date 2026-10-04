@@ -12,7 +12,12 @@
           "package_name": "com.cpaul.mathquest"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "554590806579-i0jfvmv3cvk90a4trtfhgnmb95u7csns.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBdPzm9Ly7UfRUsVCScxUhA52CDUJHACgY"

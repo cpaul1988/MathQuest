@@ -4,11 +4,9 @@ Last-player selection is stored in device-local `mqPlayerSession`, outside house
 
 Parent Google sign-in uses Android Credential Manager and exchanges the Google ID token directly with Firebase. Tokens never enter the WebView or diagnostics. Email/password remains supported. Existing signed-in parents can link Google to preserve their account UID and cloud history. Account deletion reauthenticates the same Firebase user, including Google-only users; selecting another Google account cannot delete the current account. No progress uploads happen during signup. Cloud Save/Restore remains manual.
 
-## Configuration required before release
+## Configuration completed — October 4, 2026
 
-Enable Google in Firebase Authentication for mathquest-4003c, use MathQuest as the public name and choose the owner support email. Register the existing release SHA-1 AF:0F:DE:BD:16:0A:D4:78:5D:2D:CF:94:82:FE:EB:82:C5:3C:58:18 and SHA-256 14:F7:67:1E:56:49:CB:5F:C9:23:4A:3D:79:C8:EE:69:CD:53:8C:3C:1F:B5:6D:8E:F0:23:4B:4E:CD:43:19:7D. Download the refreshed google-services.json containing the web OAuth client ID and rebuild. Google Play later needs its separate app-signing certificate registered.
-
-Current config has no OAuth client ID, so this candidate reports Google configuration unavailable until replaced. It is not published or promoted. Browser security rules require action-time confirmation for enabling the new authentication method and registering its credentials.
+Google sign-in is enabled with the owner’s action-time approval. Public name: MathQuest. Support email: cpaul1988@gmail.com. The existing release SHA-1 and SHA-256 fingerprints are registered for com.cpaul.mathquest. Firebase’s configuration download did not return a file in the browser; the generated public Web client ID was read from the provider’s Web SDK configuration and added as a type-3 oauth_client to the existing google-services.json. No OAuth client secret is packaged. The Google Services Gradle plugin generates default_web_client_id from this entry. Google Play later needs its own app-signing certificate registered. Billing remains Spark.
 
 ## Validation
 
