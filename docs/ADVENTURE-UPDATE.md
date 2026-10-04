@@ -1,4 +1,4 @@
-# MathQuest adventure candidate — 1.2.0-beta.1
+# MathQuest adventure candidate — 1.2.0-beta.2
 
 The game now emphasizes learning and exploration. Stars, streaks and practice progress work without monetary rewards. The main game shows the question, answer controls, feedback, streak and permanent stars. My Adventure, Missions and More lead to secondary screens.
 
@@ -27,7 +27,7 @@ The game now emphasizes learning and exploration. Stars, streaks and practice pr
 
 ## Icon
 
-Original vector artwork combines an open book, compass star and math plus, in navy, teal and gold. Includes a legacy drawable, Android adaptive layers, Android 13 monochrome icon, source SVG and a PNG preview in `artwork/`. No stock character, Robux logo, or generated bitmap dependency.
+The selected Number Challenge artwork uses 2, 4, 6 and ? tiles. Includes launcher bitmap, padded Android adaptive layers, a matching monochrome tile icon and preview in `artwork/number-challenge.png`. Earlier compass/book artwork is retained only as archived source.
 
 ## Before release
 

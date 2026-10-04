@@ -36,3 +36,8 @@ The release workflow builds/lints both variants and checks merged manifests for 
 - PASS: APK signature verified against existing signing certificate SHA-256 `14f7671e5649cb5fc9234a3d79c8ee69cd538c3c1fb56d8ef0234b4ecd43197d`.
 - Original compass/book vector icon includes adaptive and monochrome resources.
 - Physical-device upgrade, icon, keyboard, read-aloud and real Firebase account/two-device transfer checks remain pending. Cloud transfers are manual. Candidate is not promoted to automatic updates or Google Play.
+
+
+## 1.2.0-beta.2 icon update — 2026-10-04
+
+Selected Number Challenge artwork replaces launcher and player-selection artwork. Clean GitHub APK and Play AAB builds and both lint variants passed. Distribution isolation and original signing certificate verified. Embedded WebP decoded successfully. Gameplay and save schema unchanged; prior physical-device testing requirements remain.

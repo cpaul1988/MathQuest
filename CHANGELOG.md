@@ -1,3 +1,9 @@
+MathQuest 1.2.0-beta.2 — Number Challenge icon
+
+- Adopt selected 2, 4, 6, ? number-tile artwork for launcher and player selection.
+- Include adaptive icon padding and matching monochrome number tiles.
+- Gameplay and save format unchanged from beta.1.
+
 MathQuest 1.2.0-beta.1 — learning adventure candidate (not promoted)
 
 - Original compass-and-book Android icon, adaptive and monochrome variants.

@@ -1,6 +1,6 @@
 # Math Quest for Android
 
-Current channel: **GitHub**. Google Play preparation is underway; this is not yet a store release. See [Play readiness](docs/PLAY-READINESS.md) and [privacy information](docs/PRIVACY.md). The current published APK is 1.0.1. This branch prepares 1.2.0-beta.1 with optional parent accounts and manual cloud Save/Restore; production access rules are deployed and real-device checks are still pending. See [Firebase setup](docs/FIREBASE-SETUP.md).
+Current channel: **GitHub**. Google Play preparation is underway; this is not yet a store release. See [Play readiness](docs/PLAY-READINESS.md) and [privacy information](docs/PRIVACY.md). The current published APK is 1.0.1. This branch prepares 1.2.0-beta.2 with optional parent accounts and manual cloud Save/Restore; production access rules are deployed and real-device checks are still pending. See [Firebase setup](docs/FIREBASE-SETUP.md).
 
 Offline math adventure with optional family rewards. Based on the v13 game; local profiles, streak-based rewards, Easy multiple choice / Hard typed answers, weak-fact review, missions, badges, seasonal worlds and parent reward requests. This is an independent family game, not affiliated with Roblox. Parents supply rewards manually.
 
