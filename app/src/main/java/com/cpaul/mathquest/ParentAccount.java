@@ -27,6 +27,7 @@ final class ParentAccount {
             .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build()).build());
     }
     void close(){closed=true;google.close();}
+    boolean isSignedIn(){return auth.getCurrentUser()!=null;}
     boolean isBusy(){return busy;}
     void signOutFromDevice(){if(!busy){auth.signOut();google.clear();emit("signedOut","",0,"");}}
     private boolean live(){return !closed&&!activity.isFinishing()&&!activity.isDestroyed();}
@@ -42,12 +43,13 @@ final class ParentAccount {
         }
         message("Action could not finish",text);
     }
-    void open(String payload,String metadata){if(busy||!live())return;
+    void open(String payload,String metadata){open(payload,metadata,"menu");}
+    void open(String payload,String metadata,String action){if(busy||!live())return;
         try {JSONObject p=new JSONObject(payload); if(p.has("pin")||p.getInt("version")!=13||!p.has("profiles")||payload.length()>650000)throw new JSONException("payload");}
         catch(Exception e){message("Cloud save unavailable","The save is invalid or too large. Export a device backup instead.");return;}
         snapshot=payload;meta=metadata;
         FirebaseUser user=auth.getCurrentUser();
-        if(user==null){new AlertDialog.Builder(activity).setTitle("Parent account")
+        if(user==null){if("signin".equals(action)){credentials(false);return;}if("signup".equals(action)){credentials(true);return;}if("google".equals(action)){googleNotice();return;}new AlertDialog.Builder(activity).setTitle("Parent account")
             .setItems(new String[]{"Continue with Google", "Sign up with email", "Sign in with email", "Reset email password"},(d,w)->{switch(w){case 0:googleNotice();break;case 1:credentials(true);break;case 2:credentials(false);break;case 3:reset();break;default:break;}})
             .setNegativeButton("Cancel",null).show();return;}
         new AlertDialog.Builder(activity).setTitle("Parent account: "+user.getEmail())
@@ -72,10 +74,12 @@ final class ParentAccount {
     }
     private EditText input(String hint,int type){EditText x=new EditText(activity);x.setHint(hint);x.setInputType(type);x.setSingleLine(true);return x;}
     private void credentials(boolean create){
-        LinearLayout form=new LinearLayout(activity);form.setOrientation(LinearLayout.VERTICAL);form.setPadding(32,12,32,8);
+        LinearLayout form=new LinearLayout(activity);form.setOrientation(LinearLayout.VERTICAL);form.setPadding(32,24,32,24);
+        TextView intro=new TextView(activity);intro.setText(create?"Your family’s next chapter starts here.\nSave and restore progress when you choose.":"Welcome back.\nYour offline progress stays right here.");intro.setTextSize(17);intro.setPadding(0,0,0,24);form.addView(intro);
         EditText email=input("Parent email",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
         EditText password=input("Password (12+ characters for signup)",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        form.addView(email);form.addView(password);
+        email.setMinHeight(144);password.setMinHeight(144);form.addView(email);form.addView(password);
+        TextView privacy=new TextView(activity);privacy.setText("Parent accounts only · No promotional emails");privacy.setPadding(0,20,0,12);form.addView(privacy);
         CheckBox consent=new CheckBox(activity);consent.setText(R.string.parent_account_notice);if(create)form.addView(consent);
         AlertDialog dialog=new AlertDialog.Builder(activity).setTitle(create?"Create parent account":"Sign in").setView(form).setNegativeButton("Cancel",null).setPositiveButton(create?"Create account":"Sign in",null).create();
         dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{
