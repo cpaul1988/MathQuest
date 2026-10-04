@@ -220,7 +220,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
 <details class="login-utilities"><summary>Backups, privacy &amp; parent setup</summary>            <button class="small-btn" onclick="exportBackup()">Export backup</button>
             <button class="small-btn" onclick="document.getElementById('backup-input').click()">Restore backup</button>
             <input id="backup-input" type="file" accept="application/json,.json" hidden onchange="importBackup(this)">
-            <button class="small-btn" onclick="openParentAccount()">Parent account &amp; cloud save</button><button class="small-btn" onclick="showPrivacy()">Privacy &amp; family rewards</button><p style="font-size:.85em">Parent: set up this device’s PIN before children play. This is a household control, not a secure online account.</p>
+            <button class="small-btn" onclick="openParentAccount()">Parent account &amp; cloud save</button><button class="small-btn" onclick="showPrivacy()">Privacy &amp; family rewards</button><p style="font-size:.85em">Testing mode: the parent PIN is temporarily disabled. Reward settings are open on this device.</p>
             
 </details>
             <div id="login-status"></div>
@@ -246,7 +246,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
                 <div class="progress-bar" id="streak-bar"></div>
             </div>
 
-            <p id="session-label"></p>
+            <p id="session-label"></p><p id="configured-reward-goal" aria-live="polite" class="task-card hidden"></p>
             <div id="quiz-block">
                 <div class="question" id="question-text"></div>
                 <div class="options" id="options-container"></div>
@@ -255,7 +255,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
             </div>
             <div id="message" aria-live="polite"></div><div id="answer-explanation" class="hidden lesson" aria-live="polite"></div>
             <nav class="game-tools" aria-label="Game extras">
-                <button class="small-btn" onclick="showAdventure()">🧭 My adventure</button><button class="small-btn" onclick="showTasks()">🎯 Missions</button>
+                <button class="small-btn" onclick="showAdventure()">🧭 My adventure</button><button class="small-btn" onclick="showTasks()">🎯 Missions</button><button class="small-btn" onclick="showRewards()">🎁 Rewards</button>
 
                 <button class="small-btn" onclick="openGameMenu()">☰ More</button>
             </nav>
@@ -346,12 +346,13 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
     .playing .header-controls{margin-bottom:8px}.playing #parent-btn,.playing #switch-user-btn{display:none}.playing .stats-board{padding:10px;margin-bottom:10px}.playing .stats-top{margin-bottom:5px}.playing .robux-text{display:none}.playing #cashout-btn{padding:7px 10px;font-size:.85em}.playing .progress-bar-container{height:8px;margin-bottom:10px}.playing #session-label{font-size:.8em;margin:8px 0;color:var(--q-color)}
     #quiz-block{padding:8px 0 12px}.playing .question{font-size:clamp(2.4rem,9vw,3.6rem);margin:10px 0 20px;line-height:1.15}.game-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;border-top:1px solid var(--q-color);padding-top:12px;margin-top:12px}.game-tools button{margin:0;font-size:.8em;padding:10px 4px}.playing #message{font-size:1em;min-height:0;margin:6px 0}.playing #typed-form{margin:0}.playing #typed-answer{box-sizing:border-box;width:100%;font-size:1.5em;margin:10px 0}.playing #typed-submit{margin:0}.playing #next-btn{font-size:1.15em;padding:12px}.playing .option-btn{font-size:1.8em;padding:17px 10px}
     </style>
-    <div id="privacy-modal" class="modal-overlay hidden"><div class="modal"><h2>Privacy &amp; family rewards</h2><p>We never send promotional emails.</p><p>This version saves player names, learning progress, reward rules, requests and parent email addresses on this device. An optional parent account uses Firebase with email/password or Google sign-in. Google sign-in shares your basic Google profile and email with Firebase for authentication. Your child’s player profile stays separate from the parent account. Parent account offers manual cloud save and restore after email verification. Each upload needs confirmation and includes all household profiles and reward information, but excludes the device PIN. Local changes are not uploaded automatically. We use no promotional emails. Account deletion is available in Parent account; a minimal deletion marker remains to block old sessions from recreating data. Local copies and exported files must be erased separately. Use nicknames rather than children's full names.</p><p>Reward emails open in your email app and are sent only when you press Send. Parents supply all rewards. MathQuest does not pay cash, supply Robux, or have an affiliation with Roblox.</p><p>The GitHub edition contacts GitHub to check for and download updates. The Play edition uses Google Play for updates. Those services receive normal network information such as your IP address. Diagnostics stay on your device unless you export and share them.</p><p>Backups include parent email addresses and the device PIN. Keep them private. There are no ads or advertising analytics in this app.</p><button class="modal-btn btn-parent-action" onclick="eraseDeviceData()">Parent: erase this device's progress</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
+    <div id="privacy-modal" class="modal-overlay hidden"><div class="modal"><h2>Privacy &amp; family rewards</h2><p>We never send promotional emails.</p><p>This version saves player names, learning progress, reward rules, requests and parent email addresses on this device. An optional parent account uses Firebase with email/password or Google sign-in. Google sign-in shares your basic Google profile and email with Firebase for authentication. Your child’s player profile stays separate from the parent account. Parent account offers manual cloud save and restore after email verification. Each upload needs confirmation and includes all household profiles and reward information, but excludes the device PIN. Local changes are not uploaded automatically. We use no promotional emails. Account deletion is available in Parent account; a minimal deletion marker remains to block old sessions from recreating data. Local copies and exported files must be erased separately. Use nicknames rather than children's full names.</p><p>Reward emails open in your email app and are sent only when you press Send. Parents supply all rewards. MathQuest does not pay cash, supply Robux, or have an affiliation with Roblox.</p><p>The GitHub edition contacts GitHub to check for and download updates. The Play edition uses Google Play for updates. Those services receive normal network information such as your IP address. Diagnostics stay on your device unless you export and share them.</p><p>Backups include parent email addresses and legacy device settings. Keep them private. There are no ads or advertising analytics in this app.</p><button class="modal-btn btn-parent-action" onclick="eraseDeviceData()">Parent: erase this device's progress</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
     <div id="recovery-modal" class="modal-overlay hidden"><div class="modal"><h2>Let’s get you playing again</h2><p id="recovery-text">Something interrupted the game. Your last saved progress has not been erased.</p><button class="modal-btn btn-confirm" onclick="location.reload()">Reload saved game</button><button class="modal-btn btn-cancel" onclick="AndroidGame.exportDiagnostics()">Save error report</button></div></div>
 
 <div id="adventure-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>🧭 My adventure</h2><p id="adventure-summary"></p><button class="small-btn" onclick="closeModals();showBadges()">My badges</button><button class="small-btn" onclick="closeModals();showDashboard()">Learning progress</button><button class="modal-btn" onclick="startMission('recommended')">Start my 10-question path</button><button class="modal-btn" onclick="startMission('review')">Practice weak skills • 8 questions</button><button class="modal-btn" onclick="startMission('boss')">Guardian challenge • 5 mixed questions</button><div id="adventure-map"></div><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
 <div id="milestone-modal" class="modal-overlay hidden"><div class="modal"><h2>Milestone rewards</h2><p id="milestone-status"></p><div id="milestone-editor" class="hidden"><label><input id="milestone-enabled" type="checkbox" onchange="toggleMilestones()"> Enable custom milestone rewards for this player</label><p>Choose a reward your family supplies: extra game time, an outing, cash or Robux. Each reward is earned once. Learning since creation counts, including while rewards are off; rewards unlock when enabled. Existing earned rewards stay earned.</p><label>Reward name<input id="milestone-title" class="login-input" maxlength="80" placeholder="30 minutes of game time"></label><label>Milestone<select id="milestone-kind" class="op-select"><option value="correct">Correct answers</option><option value="hard">Correct answers in Hard mode</option><option value="days">New practice days</option><option value="badges">New badges</option></select></label><label>Target<input id="milestone-target" class="login-input" type="number" min="1" max="10000" value="25"></label><button class="modal-btn" onclick="addMilestone()">Add reward</button></div><div id="milestone-list"></div><button id="milestone-configure" class="modal-btn" onclick="showMilestones(true)">Parent: configure rewards</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
-<div id="family-rewards-modal" class="modal-overlay hidden"><div class="modal"><h2>Family rewards</h2><button class="modal-btn" onclick="showMilestones(false)">Milestone rewards</button><p>Parents choose and supply rewards. Learning and adventures work without them.</p><p>Available: $<span id="dollars-text">0</span></p><p>Largest affordable pack: <span id="robux-text">0</span> Robux</p><button id="cashout-btn" class="modal-btn" onclick="closeModals();openCashOutModal()" disabled>Request reward</button><button class="modal-btn" onclick="closeModals();showRequests(false)">Reward history</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
+<div id="reward-config-modal" class="modal-overlay hidden"><div class="modal"><h2>Configure rewards</h2><p>For this player. Settings are open—no PIN. Your family supplies all rewards.</p><label><input id="earn-enabled" type="checkbox"> Enable configured earning</label><label>Earn<select id="earn-currency" class="op-select"><option value="points">Points</option><option value="dollars">Dollars</option><option value="stars">Reward stars</option></select></label><label>Amount earned each time (1–1000)<input id="earn-amount" class="login-input" type="number" min="1" max="1000"></label><label>Correct answers needed (1–1000)<input id="earn-target" class="login-input" type="number" min="1" max="1000"></label><label>Answer setting<select id="earn-mode" class="op-select"><option value="any">Easy or Hard</option><option value="easy">Easy — multiple choice</option><option value="hard">Hard — typed answer</option></select></label><label>Math setting<select id="earn-operation" class="op-select"><option value="any">Any operation</option><option value="addition">Addition</option><option value="subtraction">Subtraction</option><option value="multiplication">Multiplication</option><option value="division">Division</option></select></label><p>Correct answers accumulate; mistakes do not reset this goal. Enabling this replaces automatic streak-dollar payouts. Streaks and adventure stars still grow. Reward stars are a separate spendable balance.</p><button class="modal-btn" onclick="saveEarningRule()">Save earning rule</button><h3>Add a reward to the shop</h3><label>Reward<select id="shop-kind" class="op-select"><option value="robux">Robux</option><option value="minecoins">Minecraft Minecoins</option><option value="screen">Screen time (minutes)</option><option value="cash">Cash (dollars)</option><option value="outing">Family outing</option><option value="choice">Choose a family activity</option><option value="custom">Custom reward</option></select></label><label>Quantity (1–100000)<input id="shop-quantity" class="login-input" type="number" min="1" max="100000" value="30"></label><label>Custom name / optional details<input id="shop-name" class="login-input" maxlength="80" placeholder="Choose a movie, trip to the park…"></label><label>Cost (1–1000000)<input id="shop-cost" class="login-input" type="number" min="1" max="1000000" value="100"></label><label>Pay with<select id="shop-currency" class="op-select"><option value="points">Points</option><option value="dollars">Dollars</option><option value="stars">Reward stars</option></select></label><p>These are your family’s reward costs, not store prices or automatic purchases. The existing Robux package price table stays unchanged.</p><button class="modal-btn" onclick="addShopReward()">Add reward</button><div id="reward-shop-editor"></div><button class="modal-btn btn-cancel" onclick="showRewards()">Back to rewards</button></div></div>
+<div id="family-rewards-modal" class="modal-overlay hidden"><div class="modal"><h2>Family rewards</h2><button class="modal-btn" onclick="configureRewards()">Configure rewards</button><div id="reward-shop-player"></div><button class="modal-btn" onclick="showMilestones(false)">Milestone rewards</button><p>Parents choose and supply rewards. Learning and adventures work without them.</p><p>Available: $<span id="dollars-text">0</span></p><p>Largest affordable pack: <span id="robux-text">0</span> Robux</p><button id="cashout-btn" class="modal-btn" onclick="closeModals();openCashOutModal()" disabled>Request reward</button><button class="modal-btn" onclick="closeModals();showRequests(false)">Reward history</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
 <div id="comfort-modal" class="modal-overlay hidden"><div class="modal"><h2>Make it comfortable</h2><label><input id="comfort-sound" type="checkbox" onchange="saveComfort()"> Play sounds</label><label><input id="comfort-motion" type="checkbox" onchange="saveComfort()"> Animated effects</label><label>Text size<select id="comfort-text" onchange="saveComfort()"><option value="1">Standard</option><option value="1.15">Larger</option><option value="1.3">Largest</option></select></label><p>Read aloud uses your device's available voice when supported.</p><button class="modal-btn" onclick="readQuestion()">Read this question aloud</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
 <div id="session-modal" class="modal-overlay hidden"><div class="modal"><h2>Journey complete ✨</h2><p id="session-result"></p><p>Every practice step counts. Your progress is saved.</p><button class="modal-btn" onclick="closeModals();showAdventure()">My adventure</button><button class="modal-btn" onclick="closeModals();generateRandomQuestion()">Keep practicing</button></div></div>
 
@@ -399,17 +400,13 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
                 return true;
             } catch(e) { recordFault('SAVE_ERROR');storageFailed=true; alert('Saving stopped: '+e.message+' Reload this page before playing again. Your last saved progress is preserved.'); document.getElementById('game-screen').classList.add('hidden'); document.getElementById('login-status').innerText='Saving unavailable. Reload before continuing.'; return false; }
         }
-        function authorizeParent() {
-            if(storageFailed) return false;
-            if(!db.pin) {
-                const pin=prompt('Parent setup: choose a 4–8 digit PIN for this device. Keep it private.');
-                if(!/^\d{4,8}$/.test(pin||'')) return false;
-                if(prompt('Confirm the new PIN:')!==pin) {alert('PINs did not match.');return false;}
-                db.pin=pin; if(!persist()) return false; return true;
-            }
-            const entered=prompt('Enter this device’s Parent PIN:');
-            if(entered===db.pin) return true;
-            if(entered!==null) alert('Incorrect PIN.'); return false;
+        // Temporary testing switch. Restore this gate before wider family distribution.
+        const PARENT_PIN_REQUIRED=false;
+        function authorizeParent(){
+            if(storageFailed)return false;
+            if(!PARENT_PIN_REQUIRED)return true;
+            if(!db.pin){const pin=prompt('Choose a 4–8 digit parent PIN');if(!/^\d{4,8}$/.test(pin||'')||prompt('Confirm PIN')!==pin)return false;db.pin=pin;return persist();}
+            return prompt('Enter parent PIN')===db.pin;
         }
         function renderProfiles() {
             const picker=document.getElementById('profile-picker'); picker.replaceChildren(new Option('New player…',''));
@@ -542,7 +539,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
             activeProfile=db.profiles.find(p=>p.name.toLowerCase()===name.toLowerCase());
             if(!activeProfile) {
                 if(!authorizeParent()) return;
-                const email=(prompt('Parent email for reward drafts (you can add it later):')||'').trim();
+                const email='';
                 if(email && !validEmail(email)) {alert('Enter a valid email address.');return;}
                 activeProfile={name,email,streak:0,dollars:0,requests:[]}; upgradeProfile(activeProfile); activeProfile.rules.enabled=false; db.profiles.push(activeProfile);
                 if(!persist()) return;
@@ -677,7 +674,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
             if(correct) {
                 streak++;day.best=Math.max(day.best,streak);activeProfile.best=Math.max(activeProfile.best,streak);
                 if(streak>=activeProfile.rules.goal) {
-                    const award=activeProfile.rules.enabled===false?0:Math.max(0,Math.min(activeProfile.rules.award,activeProfile.rules.cap-day.earned,1000000-dollars));
+                    const award=(activeProfile.rewardShop?.enabled||activeProfile.rules.enabled===false)?0:Math.max(0,Math.min(activeProfile.rules.award,activeProfile.rules.cap-day.earned,1000000-dollars));
                     dollars+=award;day.earned+=award;streak=0;day.completed++;activeProfile.completed++;day.season=currentTheme;
                     message.innerText='🎉 '+activeProfile.rules.goal+' IN A ROW! '+(award?'You earned $'+award+'!':'Streak completed! Your adventure keeps growing.');soundWin();spawnParticles();
                 } else {message.innerText=themesData[currentTheme].msgGood;soundCorrect();}
@@ -686,7 +683,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
                 streak=0;message.innerText='A new streak starts next question. Your stars and earned rewards are safe.';message.style.color='var(--msg-bad)';btn.classList.add('incorrect');soundWrong();
             }
             day.hardCorrect=(day.hardCorrect||0)+(correct&&mode==='hard'?1:0);day.correctByOp[currentOp]=(day.correctByOp[currentOp]||0)+(correct?1:0);
-            recordJourney(correct);showExplanation(correct);
+            recordJourney(correct);earnConfiguredReward(correct);showExplanation(correct);
             const newBadges=awardBadges();
             updateStats(true);document.getElementById('badge-notice').innerText=newBadges.length?'🏅 Badge unlocked: '+newBadges.join(' • '):'';document.getElementById('next-btn').classList.remove('hidden');
         }
@@ -697,7 +694,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
         }
 
         function closeModals() {
-            ['cashout-modal','parent-modal','requests-modal','dashboard-modal','badges-modal','tasks-modal','game-menu-modal','privacy-modal','adventure-modal','family-rewards-modal','comfort-modal','session-modal','milestone-modal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+            ['cashout-modal','parent-modal','requests-modal','dashboard-modal','badges-modal','tasks-modal','game-menu-modal','privacy-modal','adventure-modal','family-rewards-modal','comfort-modal','session-modal','milestone-modal','reward-config-modal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
             parentAuthorized=false;
         }
         function openCashOutModal() {
@@ -777,7 +774,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
         }
         function parentResetAll() {
             if(!parentAuthorized) return;
-            if(activeProfile.requests.some(r=>r.status==='pending')) {alert('Resolve pending requests before resetting progress.');return;}
+            if(activeProfile.requests.some(r=>r.status==='pending')||activeProfile.rewardShop?.requests.some(r=>r.status==='pending')) {alert('Resolve pending requests before resetting progress.');return;}
             if(!confirm('Reset '+currentUser+'’s balance and streak? Reward history will remain.')) return;
             dollars=0;streak=0;if(saveData()) {updateStats(false);closeModals();}
         }
@@ -818,7 +815,7 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
             if(v && v.version===12 && Array.isArray(v.profiles))v.version=13;
         }
         function validateLearning(p){
-            validateJourney(p);validateMilestones(p);
+            validateJourney(p);validateMilestones(p);validateRewardShop(p);
             const integer=(v,min,max)=>Number.isSafeInteger(v)&&v>=min&&v<=max;
             const r=p.rules;
             if(!r||(r.enabled!==undefined&&typeof r.enabled!=='boolean')||!integer(r.goal,2,100)||!integer(r.award,1,100)||!integer(r.cap,0,1000)||!integer(r.minimum,1,1000)||Object.hasOwn(r,'rate')||!['cash','robux','both'].includes(r.types))throw Error('Invalid reward rules');
@@ -836,10 +833,10 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
             return tasks;
         }
         function renderLearning(){
-            const p=activeProfile,r=p.rules,d=todayData();
+            const p=activeProfile,r=p.rules,d=todayData();renderRewardGoal();
             document.getElementById('session-label').innerText=(mode==='hard'?'Hard • Type your answer':'Easy • Multiple choice')+' • '+currentOp+(reviewMode?' • Weak-skill review':'');
             document.getElementById('adventure-stars').textContent=totalsFor(p).correct;document.getElementById('display-username').textContent=p.name+' '+(trailStops.find(x=>x[0]===p.journey?.trailMark)?.[3]||'🧭');
-            document.getElementById('reward-rule-summary').innerText=r.enabled===false?'Parent-funded rewards are off. Stars and streaks still count.':r.goal+' in a row earns $'+r.award+' • Today: $'+d.earned+' / $'+r.cap+' limit';
+            document.getElementById('reward-rule-summary').innerText=p.rewardShop?.enabled?'Configured earning is active. See Rewards → Configure rewards.':r.enabled===false?'Parent-funded rewards are off. Stars and streaks still count.':r.goal+' in a row earns $'+r.award+' • Today: $'+d.earned+' / $'+r.cap+' limit';
             document.getElementById('review-toggle').innerText=reviewMode?'Back to regular practice':'Review weak skills';
             const box=document.getElementById('daily-missions');box.replaceChildren();
             const title=document.createElement('strong');title.textContent='Today’s quest board • '+dayKey();box.append(title);
@@ -1115,7 +1112,78 @@ button,input,select{font:inherit}button{min-height:48px;transition:transform .15
             if(saveData())renderMilestones();
         }
 
-        function showRewards(){if(!activeProfile)return;closeModals();updateStats(false);document.getElementById('family-rewards-modal').classList.remove('hidden');}
+
+        const shopKinds={robux:'Robux',minecoins:'Minecraft Minecoins',screen:'minutes of screen time',cash:'dollars cash',outing:'family outing',choice:'family activity choice',custom:'custom reward'};
+        const rewardUnits={points:'points',dollars:'dollars',stars:'reward stars'};
+        function newRewardShop(){return {enabled:false,currency:'points',amount:10,target:5,mode:'any',operation:'any',progress:0,wallet:{points:0,stars:0},items:[],requests:[]};}
+        function validateRewardShop(p){
+            const r=p.rewardShop;if(r===undefined)return;const n=(v,max)=>Number.isSafeInteger(v)&&v>=0&&v<=max;
+            if(!r||typeof r.enabled!=='boolean'||!Object.hasOwn(rewardUnits,r.currency)||!n(r.amount,1000)||!r.amount||!n(r.target,1000)||!r.target||!n(r.progress,r.target-1)||!['any','easy','hard'].includes(r.mode)||!['any',...operations].includes(r.operation)||!r.wallet||!n(r.wallet.points,1000000)||!n(r.wallet.stars,1000000)||!Array.isArray(r.items)||r.items.length>100||!Array.isArray(r.requests)||r.requests.length>500)throw Error('Invalid reward configuration');
+            for(const list of [r.items,r.requests]){const ids=new Set();for(const x of list){if(!x||typeof x.id!=='string'||!x.id||x.id.length>100||ids.has(x.id)||typeof x.label!=='string'||!x.label.trim()||x.label.length>160||!Object.hasOwn(rewardUnits,x.currency)||!n(x.cost,1000000)||!x.cost)throw Error('Invalid shop reward');ids.add(x.id);}}
+            for(const x of r.items)if(typeof x.active!=='boolean')throw Error('Invalid shop item');
+            for(const x of r.requests)if(!['pending','given','refunded'].includes(x.status)||typeof x.created!=='string'||!Number.isFinite(Date.parse(x.created)))throw Error('Invalid reward history');
+        }
+        function rewardBalance(currency){return currency==='dollars'?dollars:(activeProfile.rewardShop?.wallet[currency]||0);}
+        function setRewardBalance(currency,value){if(currency==='dollars')dollars=value;else activeProfile.rewardShop.wallet[currency]=value;}
+        function earnConfiguredReward(correct){
+            const r=activeProfile.rewardShop;if(!r?.enabled||!correct||(r.mode!=='any'&&r.mode!==mode)||(r.operation!=='any'&&r.operation!==currentOp))return;
+            if(rewardBalance(r.currency)>1000000-r.amount)return;
+            r.progress++;if(r.progress>=r.target){r.progress=0;setRewardBalance(r.currency,rewardBalance(r.currency)+r.amount);}
+        }
+        function renderRewardGoal(){
+            const r=activeProfile?.rewardShop,el=document.getElementById('configured-reward-goal');el.classList.toggle('hidden',!r?.enabled);if(!r?.enabled)return;
+            const setting=(r.mode==='any'?'Easy or Hard':r.mode==='hard'?'Hard':'Easy')+' · '+(r.operation==='any'?'any math':r.operation);
+            el.textContent=rewardBalance(r.currency)+' '+rewardUnits[r.currency]+' · '+r.progress+'/'+r.target+' correct → +'+r.amount+' '+rewardUnits[r.currency]+' · '+setting+(rewardBalance(r.currency)>1000000-r.amount?' · Balance limit reached':'');
+        }
+        function configureRewards(){
+            if(!activeProfile||storageFailed)return;closeModals();const r=activeProfile.rewardShop||newRewardShop();
+            document.getElementById('earn-enabled').checked=r.enabled;for(const k of ['currency','amount','target','mode','operation'])document.getElementById('earn-'+k).value=r[k];renderRewardShop();document.getElementById('reward-config-modal').classList.remove('hidden');
+        }
+        function saveEarningRule(){
+            if(!activeProfile||storageFailed)return;const old=activeProfile.rewardShop||newRewardShop(),next=JSON.parse(JSON.stringify(old));next.enabled=document.getElementById('earn-enabled').checked;
+            for(const k of ['currency','mode','operation'])next[k]=document.getElementById('earn-'+k).value;for(const k of ['target','amount'])next[k]=Number(document.getElementById('earn-'+k).value);
+            const changed=['currency','mode','operation','target','amount'].some(k=>next[k]!==old[k]);if(changed)next.progress=0;
+            try{validateRewardShop({rewardShop:next});}catch(e){alert('Use valid settings and whole numbers within the displayed limits.');return;}
+            if(changed&&old.progress&&!confirm('Changing the earning rule resets its partial question count. Earned balances stay unchanged. Save?'))return;
+            activeProfile.rewardShop=next;if(saveData()){renderRewardGoal();renderRewardShop();alert('Reward settings saved. The game now shows this earning goal.');}
+        }
+        function addShopReward(){
+            if(!activeProfile||storageFailed)return;const kind=document.getElementById('shop-kind').value,q=Number(document.getElementById('shop-quantity').value),cost=Number(document.getElementById('shop-cost').value),currency=document.getElementById('shop-currency').value,name=document.getElementById('shop-name').value.trim();
+            if(!Object.hasOwn(shopKinds,kind)||!Number.isSafeInteger(q)||q<1||q>100000||!Number.isSafeInteger(cost)||cost<1||cost>1000000||!Object.hasOwn(rewardUnits,currency)||name.length>80||(kind==='custom'&&!name)){alert('Enter a valid quantity, cost and custom name if needed.');return;}
+            const r=activeProfile.rewardShop??=newRewardShop();if(r.items.length>=100){alert('Limit: 100 reward items per player.');return;}
+            const label=q+' '+(kind==='custom'?name:shopKinds[kind]+(name?' — '+name:''));r.items.push({id:crypto.randomUUID(),label,cost,currency,active:true});if(saveData())renderRewardShop();
+        }
+        function editShopReward(id){
+            if(storageFailed)return;const x=activeProfile?.rewardShop?.items.find(x=>x.id===id);if(!x)return;
+            const label=prompt('Reward name / quantity',x.label);if(label===null)return;
+            const value=prompt('Cost in '+rewardUnits[x.currency]+' (pending requests keep their original cost)',String(x.cost));if(value===null)return;const cost=Number(value);
+            if(!label.trim()||label.trim().length>160||!Number.isSafeInteger(cost)||cost<1||cost>1000000){alert('Use a reward name up to 160 characters and a whole cost from 1 to 1,000,000.');return;}
+            x.label=label.trim();x.cost=cost;if(saveData())renderRewardShop();
+        }
+        function redeemShopReward(id){
+            if(storageFailed)return;const r=activeProfile?.rewardShop,x=r?.items.find(x=>x.id===id&&x.active);if(!x)return;
+            if(r.requests.length>=500){alert('Reward history is full. No balance was deducted.');return;}
+            if(rewardBalance(x.currency)<x.cost){alert('Keep practicing to earn enough.');return;}
+            if(!confirm('Request '+x.label+' for '+x.cost+' '+rewardUnits[x.currency]+'? Your family supplies this reward.'))return;
+            setRewardBalance(x.currency,rewardBalance(x.currency)-x.cost);r.requests.push({id:crypto.randomUUID(),label:x.label,cost:x.cost,currency:x.currency,status:'pending',created:new Date().toISOString()});if(saveData()){renderRewardShop();renderRewardGoal();updateStats(false);}
+        }
+        function resolveShopReward(id,status){
+            if(storageFailed||!['given','refunded'].includes(status))return;const x=activeProfile?.rewardShop?.requests.find(x=>x.id===id);if(!x||x.status!=='pending')return;
+            if(status==='refunded'&&rewardBalance(x.currency)>1000000-x.cost){alert('Balance limit prevents this refund. Use existing credit first.');return;}
+            if(!confirm(status==='given'?'Have you supplied this reward?':'Return the reserved credit?'))return;
+            if(status==='refunded')setRewardBalance(x.currency,rewardBalance(x.currency)+x.cost);x.status=status;if(saveData()){renderRewardShop();renderRewardGoal();}
+        }
+        function renderRewardShop(){
+            if(!activeProfile)return;const r=activeProfile.rewardShop||newRewardShop();
+            for(const [id,edit] of [['reward-shop-player',false],['reward-shop-editor',true]]){const box=document.getElementById(id);box.replaceChildren();const summary=document.createElement('p');summary.textContent=rewardBalance('points')+' points · $'+dollars+' · '+rewardBalance('stars')+' reward stars';box.append(summary);
+                const button=(card,label,fn)=>{const b=document.createElement('button');b.className='modal-btn';b.textContent=label;b.onclick=fn;card.append(b);return b;};
+                for(const x of r.items.filter(x=>edit||x.active)){const card=document.createElement('div');card.className='task-card';const t=document.createElement('p');t.textContent=x.label+' — '+x.cost+' '+rewardUnits[x.currency];card.append(t);if(edit){button(card,'Edit reward',()=>editShopReward(x.id));button(card,x.active?'Hide reward':'Show reward',()=>{if(storageFailed)return;x.active=!x.active;if(saveData())renderRewardShop();});}else button(card,'Request reward',()=>redeemShopReward(x.id)).disabled=rewardBalance(x.currency)<x.cost;box.append(card);}
+                if(!r.items.some(x=>x.active)){const t=document.createElement('p');t.textContent='Use Configure rewards to add rewards your family offers.';box.append(t);}
+                for(const x of [...r.requests].reverse()){const card=document.createElement('div');card.className='task-card';const t=document.createElement('p');t.textContent=x.label+' · '+x.status+' · '+x.cost+' '+rewardUnits[x.currency];card.append(t);if(edit&&x.status==='pending'){button(card,'Mark given',()=>resolveShopReward(x.id,'given'));button(card,'Refund',()=>resolveShopReward(x.id,'refunded'));}box.append(card);}
+            }
+        }
+
+        function showRewards(){if(!activeProfile)return;closeModals();updateStats(false);renderRewardShop();document.getElementById('family-rewards-modal').classList.remove('hidden');}
         function loadComfort(){try{const x=JSON.parse(localStorage.getItem('mqComfort')||'{}');comfort={sound:x.sound!==false,motion:x.motion!==false,text:['1','1.15','1.3'].includes(x.text)?x.text:'1'};}catch(e){}applyComfort();}
         function applyComfort(){document.body.classList.toggle('reduced-motion',!comfort.motion);document.documentElement.style.fontSize=(16*Number(comfort.text))+'px';}
         function showComfort(){closeModals();document.getElementById('comfort-sound').checked=comfort.sound;document.getElementById('comfort-motion').checked=comfort.motion;document.getElementById('comfort-text').value=comfort.text;document.getElementById('comfort-modal').classList.remove('hidden');}

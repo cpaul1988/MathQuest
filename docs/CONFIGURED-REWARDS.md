@@ -1,0 +1,11 @@
+# 1.2.4 — configurable earning and reward shop
+
+Parent PIN is temporarily disabled for owner testing using PARENT_PIN_REQUIRED=false in the central authorization function. Existing PIN data is retained, and cloud payloads still exclude it. Anyone using the device can access settings. Restore the gate before wider distribution. Native account passwords, reauthentication, delete confirmations and cloud-restore confirmations remain.
+
+Rewards → Configure rewards configures each player's earning currency (points, dollars or reward stars), amount, number of correct answers, Easy/Hard/either mode and math operation. Matching correct answers accumulate; mistakes do not reset this counter. A changed rule resets partial progress after confirmation; balances survive. Disabled earning does not accumulate credit. The game displays the current balance, rule and count. Configured earning replaces legacy automatic streak-dollar payouts while enabled; learning streaks and permanent adventure stars remain. Reward stars are a separate spendable balance.
+
+The reward shop offers Robux, Minecraft Minecoins, screen-time minutes, cash, family outings, activity choice and custom rewards. Families set quantity, cost and cost currency. These are family agreements, not marketplace prices. Existing fixed Robux packages are unchanged. No purchase is made automatically. Reward requests deduct credit once, retain a label/cost snapshot, and remain pending until marked given or refunded. Refunds apply once. Items can be edited or hidden; requests retain history. New shop requests are local and do not automatically email anyone.
+
+Limits: 1–1,000 correct answers / earning amount, balances up to 1,000,000, 100 catalogue entries and 500 requests per player. Edits cannot overflow balances. Pending shop requests block legacy balance reset. Optional validated per-profile data survives backups, manual cloud Save/Restore and restart. Upgrade devices before exchanging saves using these features.
+
+Tests cover actual question submission, rule filters, mistakes, points/dollars/reward stars, duplicate prevention, cancellation, insufficient funds, requests/refunds, permanent star preservation, restart and invalid-save rejection. Existing game/cloud/account/milestone suites also cover temporary no-PIN behavior. Physical device UI testing remains pending.

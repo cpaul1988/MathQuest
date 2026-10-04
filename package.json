@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "test": "node scripts/test-game.cjs && node scripts/test-cloud.cjs && node scripts/test-adventure.cjs && node scripts/test-resume.cjs && node scripts/test-milestones.cjs && node scripts/test-account-entry.cjs",
+    "test": "node scripts/test-game.cjs && node scripts/test-cloud.cjs && node scripts/test-adventure.cjs && node scripts/test-resume.cjs && node scripts/test-milestones.cjs && node scripts/test-account-entry.cjs && node scripts/test-reward-shop.cjs",
     "test:rules": "firebase emulators:exec --only firestore --project demo-mathquest \"node scripts/test-firestore.cjs\""
   },
   "devDependencies": {
