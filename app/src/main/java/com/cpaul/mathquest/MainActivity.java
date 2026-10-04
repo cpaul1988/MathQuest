@@ -71,6 +71,11 @@ public class MainActivity extends Activity {
         @JavascriptInterface public String versionName(){return BuildConfig.VERSION_NAME;}
         @JavascriptInterface public void checkUpdates(){runOnUiThread(()->updater.checkUpdates(true));}
         @JavascriptInterface public void exportBackup(String json){if(json==null||json.length()>5_000_000)return;runOnUiThread(()->exportText(json,"math-quest-backup.json","application/json"));}
+        @JavascriptInterface public String feedbackDiagnostics(){
+            StringBuilder report=new StringBuilder("App: MathQuest "+BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")\nAndroid API: "+Build.VERSION.SDK_INT+"\nError codes only (no profiles, email addresses or credentials):\n");
+            try{File f=new File(getFilesDir(),"diagnostics.txt");if(f.exists()){String[] lines=new String(java.nio.file.Files.readAllBytes(f.toPath()),StandardCharsets.UTF_8).split("\n");for(int i=Math.max(0,lines.length-30);i<lines.length;i++){String[] fields=lines[i].split(" ");if(fields.length>1&&allowedCodes.contains(fields[1]))report.append(fields[1]).append("\n");}}}catch(Exception e){report.append("Diagnostics unavailable\n");}return report.toString();
+        }
+        @JavascriptInterface public void exportFeedback(String report){if(report==null||report.length()>12000)return;runOnUiThread(()->exportText(report,"mathquest-feedback.txt","text/plain"));}
         @JavascriptInterface public void exportDiagnostics(){runOnUiThread(()->{try{File f=new File(getFilesDir(),"diagnostics.txt");String text="Math Quest "+BuildConfig.VERSION_NAME+" ("+BuildConfig.VERSION_CODE+")\nAndroid API "+Build.VERSION.SDK_INT+"\nNo player data included.\n"+(f.exists()?new String(java.nio.file.Files.readAllBytes(f.toPath()),StandardCharsets.UTF_8):"No errors recorded.");exportText(text,"math-quest-diagnostics.txt","text/plain");}catch(Exception e){showMessage("Export unavailable","Please try again.");}});}
         @JavascriptInterface public void recordError(String code){log(allowedCodes.contains(code)?code:"SCRIPT_ERROR","JavaScript");}
     }
