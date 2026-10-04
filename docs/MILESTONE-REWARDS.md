@@ -1,6 +1,6 @@
 # Custom milestone rewards
 
-Next-upgrade source candidate; not a published APK.
+Release 1.2.2: custom milestone rewards.
 
 Parents open Parent controls → Configure milestone rewards, or Family rewards → Milestone rewards → Parent: configure rewards. The device parent PIN protects configuration and fulfilment. Each player has a separate opt-in toggle and reward list.
 
@@ -8,6 +8,6 @@ A reward has a free-text name and a target of 1–10,000 correct answers, Hard-m
 
 Custom rewards do not credit money or purchase cash/Robux. Parents supply the described reward. The existing cash/Robux balance rules remain separate. Rewards unlock once during progress saving. Backup and manual cloud save include optional per-profile milestone data; older saves without this field remain valid. Parents should upgrade all devices before using these rewards across devices.
 
-Validation: existing game/cloud/adventure/restart tests passed. New tests cover opt-in unlocking, single award, parent-only fulfilment, safe text rendering, restart persistence and malformed-backup rejection. Physical-device UI testing and APK build remain pending.
+Validation: existing game/cloud/adventure/restart tests passed. New tests cover opt-in unlocking, single award, parent-only fulfilment, safe text rendering, restart persistence and malformed-backup rejection. The release workflow gates publication on signed builds, lint and distribution checks. Physical-device UI testing remains pending.
 
 This implements the custom rewards portion of the planned 1.3 upgrade. Visual hints, guided retries, improved spaced review, parent learning summaries and enhanced diagnostic sharing remain planned.
