@@ -1,8 +1,8 @@
 # Math Quest for Android
 
-Current channel: **GitHub**. Google Play preparation is underway; this is not yet a store release. See [Play readiness](docs/PLAY-READINESS.md) and [privacy information](docs/PRIVACY.md). Online accounts and cloud syncing are not enabled in 1.0.1.
+Current channel: **GitHub**. Google Play preparation is underway; this is not yet a store release. See [Play readiness](docs/PLAY-READINESS.md) and [privacy information](docs/PRIVACY.md). The current published APK is 1.2.0-beta.2, promoted to the latest GitHub channel at the owner’s request. This branch prepares 1.2.1 with optional parent accounts and manual cloud Save/Restore; production access rules are deployed and real-device checks are still pending. See [Firebase setup](docs/FIREBASE-SETUP.md).
 
-Offline family math game. Based on the v13 game; local profiles, streak-based rewards, Easy multiple choice / Hard typed answers, weak-fact review, missions, badges, seasonal worlds and parent reward requests. This is an independent family game, not affiliated with Roblox. Parents supply rewards manually.
+Offline math adventure with optional family rewards. Based on the v13 game; local profiles, streak-based rewards, Easy multiple choice / Hard typed answers, weak-fact review, missions, badges, seasonal worlds and parent reward requests. This is an independent family game, not affiliated with Roblox. Parents supply rewards manually.
 
 ## Install and keep progress
 
@@ -53,7 +53,7 @@ The default repository is wired into `app/build.gradle` and `scripts/make_manife
 
 ## Local build
 
-Use JDK 17, Android SDK platform 36 / build-tools 35.0.0, and Gradle 8.11.1. Set `ANDROID_HOME`. Run `gradle assembleDebug` for a development APK. Development APKs are **not** update-compatible with the release APK.
+Use JDK 17, Android SDK platform 36 / build-tools 35.0.0, and Gradle 8.13. Set `ANDROID_HOME`. Run `gradle assembleDebug` for a development APK. Development APKs are **not** update-compatible with the release APK.
 
 For release builds set `MQ_KEYSTORE` (absolute key path), `MQ_STORE_PASSWORD`, and `MQ_KEY_PASSWORD` in your local environment, then run `gradle assembleGithubRelease bundlePlayRelease lintGithubRelease lintPlayRelease`. Key alias: `mathquest`. Do not commit credentials or `local.properties`.
 
@@ -62,3 +62,15 @@ Run `npm ci && npm test` for game regressions (Node 22.22.2+, 24.15+, or 26+). N
 ## Price reference
 
 Locked packages follow the user-provided October 4, 2026 screenshot, rounded to the nearest US dollar: 80/$1, 400/$5, 800/$10, 1200/$15, 1700/$20, 3150/$35, 4500/$50, 10000/$100, 22500/$200. Tax is excluded. The 4500 tier was marked “For you”; parent verifies availability. This is an offline snapshot, not a live Roblox price feed.
+
+## Parent account candidate
+
+Open **Parent account & cloud save** from player selection or More and enter the device PIN. Create a parent account, verify the email, then refresh verification. Choose **Save this device to cloud** and confirm the upload. On another device, sign into the same account and choose **Restore cloud save**. Playing saves locally; repeat cloud Save before changing devices. A conflict requires exporting the device backup before restoring the newer cloud copy. **Recover previous device save** is under More.
+
+The initial signup notice does not upload player data. Cloud uploads require their own parent confirmation. Account deletion requires the account password; device erasure is separate. No promotional emails.
+
+For cloud security tests use JDK 21 and `npm run test:rules`. The Android build uses JDK 17. Feature-branch builds and `-beta.N` versions produce artifacts only; the workflow cannot publish them as the latest release.
+
+See [Adventure update](docs/ADVENTURE-UPDATE.md) for learning behavior, reward defaults, migration and device-testing requirements.
+
+See [Google sign-in and player resume](docs/GOOGLE-AND-RESUME.md) for the 1.2.1 update.

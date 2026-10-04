@@ -23,11 +23,20 @@ jobs:
           log-accepted-android-sdk-licenses: false
       - uses: gradle/actions/setup-gradle@v4
         with:
-          gradle-version: '8.11.1'
+          gradle-version: '8.13'
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
       - run: npm ci && npm test
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - run: npm run test:rules
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
       - name: Read version and skip existing release
         id: version
         env:
@@ -36,7 +45,7 @@ jobs:
         run: |
           name=$(sed -n 's/^versionName=//p' version.properties)
           code=$(sed -n 's/^versionCode=//p' version.properties)
-          [[ "$name" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && [[ "$code" =~ ^[1-9][0-9]*$ ]]
+          [[ "$name" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]] && [[ "$code" =~ ^[1-9][0-9]*$ ]]
           echo "tag=v$name" >> "$GITHUB_OUTPUT"
           if gh release view "v$name" >/dev/null 2>&1; then echo "exists=true" >> "$GITHUB_OUTPUT"; fi
       - name: Restore signing key
@@ -75,7 +84,7 @@ jobs:
           name: MathQuest-Play-candidate-not-for-submission
           path: app/build/outputs/bundle/playRelease/*.aab
       - name: Publish release
-        if: steps.version.outputs.exists != 'true'
+        if: steps.version.outputs.exists != 'true' && github.ref == 'refs/heads/main' && !contains(steps.version.outputs.tag, '-')
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.version.outputs.tag }}

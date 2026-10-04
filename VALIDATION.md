@@ -15,3 +15,39 @@
 Regression coverage now checks Play-specific update labeling, privacy panel navigation and local erasure: wrong PIN and cancellation leave the serialized save unchanged; confirmed erasure resets profiles and the household PIN.
 
 The release workflow builds/lints both variants and checks merged manifests for stable package identity, installer permission only in GitHub, no advertising-ID permission, and disabled automatic backup. Play candidate remains a CI artifact and is not submitted to Google Play. Signup/cloud tests cannot run until the Firebase project is created and configured; those features are not shipped in this release.
+
+## 1.1.0-beta.1 parent account candidate
+
+- `npm test` passed: easy/hard controls, persistence, privacy/erase plus parent gate, PIN exclusion, login preservation, invalid and stale cloud restore rejection, retained recovery copy, revision handling, signout, blocked erasure during account work and signout on erasure.
+- Firestore emulator 1.22.0 (demo-mathquest, JDK 21) passed authorization and schema tests: unauthenticated/unverified/cross-household denial, no listing, revisions, size cap, timestamp enforcement, recent reauthentication for deletion, no recreation after tombstone, and deletion of never-verified accounts.
+- Clean signed GitHub APK and Play AAB build plus both lint tasks passed with AGP 8.13.2 / Gradle 8.13 / JDK 17. One expected JavaScript-enabled WebView warning remains; WebView serves bundled assets and blocks other origins. The legacy onBackPressed lint suppression applies only to the API 26–32 path; API 33+ registers OnBackInvokedDispatcher.
+- Distribution isolation checks passed: stable package identity, target API 36, APK installer only in GitHub, no advertising-ID permission, disabled cloud/device-transfer backup.
+- Signed APK certificate matches 1.0.1 (SHA-256 14f7671e5649cb5fc9234a3d79c8ee69cd538c3c1fb56d8ef0234b4ecd43197d). APK ZIP alignment and all four packaged native library ELF LOAD segments passed 16KB alignment checks.
+- Production rules were published with owner approval on 2026-10-04 at 2:18 PM America/Chicago and verified as active in Firebase Console. No real email or household upload was sent during validation.
+- Not yet verified: physical Android signup/login/verification/reset, two-device transfers/conflicts, deletion retry, offline recovery and in-place update from 1.0.1. Emulator rule tests do not establish that the native UI or live project is fully tested.
+- No GitHub update promotion and no Google Play submission for this candidate. The public deletion route, public contact, consent/legal review and Play listing/testing work remain pending.
+
+
+## 1.2.0-beta.1 adventure candidate — 2026-10-04
+
+- PASS: game, cloud bridge and adventure regression suites, including format-12 migration to 13, adaptive tiers, explanations, opt-in rewards, guardian completion and accessibility persistence.
+- PASS: clean signed GitHub APK and Play AAB builds; lint for both variants.
+- PASS: distribution isolation; Play has no APK downloader/installer.
+- PASS: APK signature verified against existing signing certificate SHA-256 `14f7671e5649cb5fc9234a3d79c8ee69cd538c3c1fb56d8ef0234b4ecd43197d`.
+- Original compass/book vector icon includes adaptive and monochrome resources.
+- Physical-device upgrade, icon, keyboard, read-aloud and real Firebase account/two-device transfer checks remain pending. Cloud transfers are manual. Candidate is not promoted to automatic updates or Google Play.
+
+
+## 1.2.0-beta.2 icon update — 2026-10-04
+
+Selected Number Challenge artwork replaces launcher and player-selection artwork. Clean GitHub APK and Play AAB builds and both lint variants passed. Distribution isolation and original signing certificate verified. Embedded WebP decoded successfully. Gameplay and save schema unchanged; prior physical-device testing requirements remain.
+
+
+## 1.2.1 Google setup and profile resume — 2026-10-04
+
+- PASS all game, cloud bridge, adventure and player restart regression suites.
+- PASS clean GitHub APK / Play AAB and both lint variants after Google configuration.
+- PASS generated default_web_client_id matches Firebase’s public web client in both variants.
+- PASS distribution isolation and APK signature against existing release certificate.
+- Firebase Google provider enabled with owner approval; SHA-1 and SHA-256 release fingerprints verified in Console. Billing remains Spark.
+- Native Google account chooser, account linking/deletion and phone upgrade still need physical-device checks. No real account signup, deletion or cloud upload performed during validation.

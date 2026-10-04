@@ -1,0 +1,25 @@
+const fs=require('fs'),assert=require('node:assert/strict');
+const {JSDOM,VirtualConsole}=require('jsdom');
+(async()=>{
+ const prompts=['1234','1234','parent@example.com'],alerts=[];let bridge;
+ const dom=new JSDOM(fs.readFileSync(require('path').join(__dirname,'../app/src/main/assets/index.html'),'utf8'),{url:'https://local-game.test',runScripts:'dangerously',virtualConsole:new VirtualConsole(),beforeParse(w){w.alert=x=>alerts.push(x);w.prompt=()=>prompts.shift()||'1234';w.confirm=()=>true;w.AndroidGame={parentAccount:(payload,meta)=>bridge={payload,meta},recordError(){}};}});
+ const w=dom.window,d=w.document;await new Promise(r=>w.addEventListener('load',r));
+ d.getElementById('username-input').value='Tester';d.getElementById('btn-login-text').click();
+ const key='robuxMathLocalV10',original=w.localStorage.getItem(key);
+ w.prompt=()=> '9999';w.openParentAccount();assert.equal(bridge,undefined,'wrong PIN opens native account');
+ w.prompt=()=> '1234';w.openParentAccount();assert(!Object.hasOwn(JSON.parse(bridge.payload),'pin'),'PIN uploaded');
+ w.onParentAccount({type:'signedIn',uid:'parent-a'});assert.equal(w.localStorage.getItem(key),original,'login changed save');
+ let cloud=JSON.parse(bridge.payload);cloud.profiles[0].dollars=55;
+ const response={type:'restore',uid:'parent-a',revision:3,payload:JSON.stringify(cloud)};
+ w.onParentAccount({...response,payload:'invalid json'});assert.equal(w.localStorage.getItem(key),original,'malformed restore changed save');
+ w.onParentAccount({...response,payload:JSON.stringify({...cloud,pin:'9999'})});assert.equal(w.localStorage.getItem(key),original,'cloud PIN accepted');
+ w.onParentAccount(response);assert.equal(JSON.parse(w.localStorage.getItem(key)).profiles[0].dollars,55);assert.equal(JSON.parse(w.localStorage.getItem(key)).pin,'1234');assert.equal(w.localStorage.getItem('mqBeforeCloudRestore'),original);
+ assert.equal(JSON.parse(w.localStorage.getItem('mqCloudRevision')).revision,3);
+ w.recoverBeforeCloudRestore();assert.equal(w.localStorage.getItem(key),original);assert.equal(w.localStorage.getItem('mqCloudRevision'),null);
+ w.openParentAccount();w.eval('db.profiles[0].dollars=2;persist()');const changed=w.localStorage.getItem(key);w.onParentAccount(response);assert.equal(w.localStorage.getItem(key),changed,'stale restore overwrote local changes');
+ w.onParentAccount({type:'saved',uid:'parent-a',revision:5,payload:'unused'});assert.equal(w.localStorage.getItem(key),changed);assert.equal(JSON.parse(w.localStorage.getItem('mqCloudRevision')).revision,5);
+ w.onParentAccount({type:'signedOut'});assert.equal(w.localStorage.getItem(key),changed);assert.equal(w.localStorage.getItem('mqCloudRevision'),null);
+ let signedOut=false;w.AndroidGame.accountBusy=()=>true;w.AndroidGame.signOutAccount=()=>{signedOut=true;};w.eraseDeviceData();assert.equal(w.localStorage.getItem(key),changed,'erase interrupted account operation');w.AndroidGame.accountBusy=()=>false;
+ w.eraseDeviceData();assert(signedOut,'erase left account signed in');assert.equal(w.localStorage.getItem('mqBeforeCloudRestore'),null);assert.equal(w.localStorage.getItem('mqCloudRevision'),null);
+ console.log('PASS cloud bridge: parent gate, PIN exclusion, login preservation, invalid/stale restore rejection, recovery, revision tracking, signout and erasure');w.close();
+})().catch(e=>{console.error(e);process.exit(1)});

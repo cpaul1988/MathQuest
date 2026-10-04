@@ -8,3 +8,7 @@ private-signing/
 *.zip
 node_modules/
 release/
+
+# Emulator-local artifacts
+*-debug.log
+.firebase/

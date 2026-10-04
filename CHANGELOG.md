@@ -1,3 +1,39 @@
+MathQuest 1.2.1 — profile resume and Google account support
+
+- Reopen the last player and selected math/answer modes automatically.
+- Existing single-player devices resume without re-entering the name. Switch player still opens selection.
+- Add native Google sign-in/signup and optional linking to an existing parent account.
+- Support Google reauthentication for account deletion and credential-state clearing on signout.
+- Google provider enabled and release fingerprints registered with owner approval; public OAuth client configured.
+
+MathQuest 1.2.0-beta.2 — Number Challenge icon
+
+- Adopt selected 2, 4, 6, ? number-tile artwork for launcher and player selection.
+- Include adaptive icon padding and matching monochrome number tiles.
+- Gameplay and save format unchanged from beta.1.
+
+MathQuest 1.2.0-beta.1 — learning adventure candidate (not promoted)
+
+- Original compass-and-book Android icon, adaptive and monochrome variants.
+- Adaptive practice tiers, explanations, permanent stars and a six-stop adventure map.
+- Recommended practice, weak-skill missions and untimed mixed guardian challenges.
+- Optional rewards for new players; existing reward rules and balances preserved.
+- Main game focused on questions, stars and streaks; balances and extras behind buttons.
+- Three daily targets, fewer new badge notifications, and recent accuracy/review summaries.
+- Device sound, reduced-motion, larger text and optional read-aloud controls.
+- Save format 13 with migration from format 12. Upgrade both devices before cloud transfer.
+- Manual cloud transfers retained; real-device and Play release gates remain pending.
+
+Math Quest 1.1.0-beta.1 — parent account candidate (not promoted)
+
+- Add native parent email/password accounts, verification, reset and signout. No promotional emails.
+- Add opt-in manual cloud Save/Restore with revision conflict detection, PIN exclusion and a local recovery copy.
+- Add reauthenticated account/cloud deletion with stale-session protection.
+- Keep offline gameplay and automatic local saving. Cloud transfers require parent action.
+- Add Firebase emulator security tests and cloud-restore regression tests.
+- Upgrade Android build tooling for current Firebase SDK compatibility.
+- Production rules deployed with approval; real-device validation and Play requirements remain pending.
+
 Math Quest 1.0.1 — Google Play preparation
 
 - Target Android 16 / API 36 and handle modern Android back navigation.

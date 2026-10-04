@@ -22,7 +22,7 @@ if ($LASTEXITCODE -ne 0) { throw 'Could not save key password secret.' }
 Remove-Variable key,sign
 if (-not (Test-Path .git)) { git init -b main; git remote add origin "https://github.com/$repo.git" }
 # Explicit safe paths: no private-signing folder, binaries, local SDK paths, or secret files.
-git add .github .gitignore app/src app/build.gradle scripts build.gradle settings.gradle gradle.properties version.properties package.json package-lock.json README.md CHANGELOG.md Publish-MathQuest.ps1
+git add .github .gitignore app/src app/build.gradle app/google-services.json firebase firebase.json docs scripts build.gradle settings.gradle gradle.properties version.properties package.json package-lock.json README.md CHANGELOG.md Publish-MathQuest.ps1
 if (Test-Path gradlew) { git add gradlew gradlew.bat gradle }
 git diff --cached --quiet
 if ($LASTEXITCODE -ne 0) {

@@ -10,11 +10,11 @@ Status: preparation build; NOT approved for Play submission or sale.
 - CI builds the GitHub APK and a Play AAB candidate. The AAB is a workflow artifact only, not a Play submission.
 - Raise versionCode and versionName for every release. Never distribute a lower versionCode through another channel.
 
-## Parent accounts and syncing (Firebase project created; app integration pending)
+## Parent accounts and syncing (candidate implemented; rules deployed, device testing pending)
 
-Use Firebase Spark with email/password Authentication and Firestore Standard. Disable Analytics, ads, AI features and optional data-sharing integrations. No paid billing upgrade is authorized. Firebase terms were accepted with the owner's explicit approval on 2026-10-04. Project `mathquest-4003c` is on Spark; Email/Password is enabled, and the default Standard Firestore database in `nam5` is provisioned in production mode (all client access denied). See [FIREBASE-SETUP.md](FIREBASE-SETUP.md) for the checkpoint and remaining integration work.
+Use Firebase Spark with email/password Authentication and Firestore Standard. Disable Analytics, ads, AI features and optional data-sharing integrations. No paid billing upgrade is authorized. Firebase terms were accepted with the owner's explicit approval on 2026-10-04. Project `mathquest-4003c` is on Spark; Email/Password is enabled, and the default Standard Firestore database in `nam5` is provisioned in production mode; the tested owner-only access rules were published with approval on 2026-10-04. See [FIREBASE-SETUP.md](FIREBASE-SETUP.md) for the checkpoint and remaining integration work.
 
-Before enabling signup:
+The `feature/parent-accounts` candidate implements native account controls and manual cloud Save/Restore. Owner-only production rules were deployed with owner approval on 2026-10-04; device testing remains pending. Automatic multi-device syncing is not implemented. Remaining gates before promotion:
 1. Create and configure the project, register the Android application and restrict the client API key appropriately. Never include service-account keys in the application or source repository.
 2. Require a parent-owned account, verification before cloud writes, password reset, reauthentication for deletion, and explicit agreement to upload household data. Email signup is not itself verified parental consent.
 3. Keep child nicknames, progress, rules and reward requests under the parent UID. Do not upload local PINs, passwords or unrelated device data.
