@@ -21,3 +21,7 @@ Firestore uses memory-only SDK caching, and Restore requires a live server respo
 This describes the parent-account candidate, not the currently published 1.0.1 APK. Owner-only production access rules are deployed; real-device validation of this candidate remains pending. Before Play submission, the developer must supply a public support/privacy contact, publish a stable policy URL, and update this information to describe any enabled account/sync service and its deletion/retention procedures. This document is not a completed Play privacy-policy submission.
 
 Adventure progress includes adaptive practice levels, recent answer windows, guardian completion counts and the chosen profile pin. It travels with parent-approved cloud saves and backups. Sound, motion and text-size preferences stay on the device. Read-aloud sends only the current arithmetic question to the configured Android speech engine; that engine controls voice processing and availability.
+
+
+## 1.2.1 candidate
+Optional parent Google sign-in uses Google profile/email and Firebase authentication. Tokens remain native and are never included in diagnostics or household saves. The last selected player and practice preferences are stored locally so the app can resume. Google account setup does not upload player progress.

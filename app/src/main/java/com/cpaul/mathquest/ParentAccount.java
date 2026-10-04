@@ -15,19 +15,20 @@ final class ParentAccount {
     private final Activity activity;
     private final Consumer<String> callback;
     private final FirebaseAuth auth;
+    private final GoogleAccount google;
     private final FirebaseFirestore cloud;
     private String snapshot, meta;
     private volatile boolean busy;
     private boolean closed;
     ParentAccount(Activity activity, Consumer<String> callback) {
         this.activity=activity; this.callback=callback;
-        auth=FirebaseAuth.getInstance(); cloud=FirebaseFirestore.getInstance();
+        google=new GoogleAccount(activity);auth=FirebaseAuth.getInstance(); cloud=FirebaseFirestore.getInstance();
         cloud.setFirestoreSettings(new FirebaseFirestoreSettings.Builder()
             .setLocalCacheSettings(MemoryCacheSettings.newBuilder().build()).build());
     }
-    void close(){closed=true;}
+    void close(){closed=true;google.close();}
     boolean isBusy(){return busy;}
-    void signOutFromDevice(){if(!busy){auth.signOut();emit("signedOut","",0,"");}}
+    void signOutFromDevice(){if(!busy){auth.signOut();google.clear();emit("signedOut","",0,"");}}
     private boolean live(){return !closed&&!activity.isFinishing()&&!activity.isDestroyed();}
     private void message(String title,String text){if(live())new AlertDialog.Builder(activity).setTitle(title).setMessage(text).setPositiveButton("OK",null).show();}
     private void fail(Exception error){busy=false; String code=error instanceof FirebaseAuthException?((FirebaseAuthException)error).getErrorCode():"";
@@ -47,12 +48,27 @@ final class ParentAccount {
         snapshot=payload;meta=metadata;
         FirebaseUser user=auth.getCurrentUser();
         if(user==null){new AlertDialog.Builder(activity).setTitle("Parent account")
-            .setMessage("Optional cloud saves use Firebase. Local play needs no account. We never send promotional emails. Use a parent's email address.")
-            .setPositiveButton("Sign in",(d,w)->credentials(false)).setNeutralButton("Sign up",(d,w)->credentials(true)).setNegativeButton("Reset password",(d,w)->reset()).show();return;}
+            .setItems(new String[]{"Continue with Google", "Sign up with email", "Sign in with email", "Reset email password"},(d,w)->{switch(w){case 0:googleNotice();break;case 1:credentials(true);break;case 2:credentials(false);break;case 3:reset();break;default:break;}})
+            .setNegativeButton("Cancel",null).show();return;}
         new AlertDialog.Builder(activity).setTitle("Parent account: "+user.getEmail())
-            .setItems(new String[]{"Refresh email verification", "Send verification email", "Save this device to cloud", "Restore cloud save to this device", "Sign out", "Delete account and cloud data"},(d,w)->{
-                switch(w){case 0:refresh(user);break;case 1:verify(user);break;case 2:save(user);break;case 3:restore(user);break;case 4:auth.signOut();emit("signedOut","",0,"");message("Signed out","Local progress remains on this device.");break;case 5:deletePrompt(user);break;default:break;}
+            .setItems(new String[]{"Refresh email verification", "Send verification email", "Save this device to cloud", "Restore cloud save to this device", "Sign out", "Delete account and cloud data", "Link Google to this account"},(d,w)->{
+                switch(w){case 0:refresh(user);break;case 1:verify(user);break;case 2:save(user);break;case 3:restore(user);break;case 4:auth.signOut();google.clear();emit("signedOut","",0,"");message("Signed out","Local progress remains on this device.");break;case 5:deletePrompt(user);break;case 6:googleLink(user);break;default:break;}
             }).setNegativeButton("Close",null).show();
+    }
+    private void googleFailure(Exception e){busy=false;if(!live())return;
+        if(e instanceof androidx.credentials.exceptions.GetCredentialCancellationException)return;
+        String text="Google sign-in could not finish. Check your connection and Google Play services, then try again. You can still use email sign-in and play offline.";
+        if(e instanceof IllegalStateException)text="Google sign-in is not configured for this build yet. Email sign-in and offline play are still available.";
+        if(e instanceof FirebaseAuthUserCollisionException)text="An account already uses this email or Google login. Sign in using your original method, then choose Link Google to this account. Your existing cloud save has not been replaced.";
+        message("Google sign-in unavailable",text);
+    }
+    private void googleNotice(){
+        CheckBox notice=new CheckBox(activity);notice.setText("I am the parent/adult account holder. Google shares my basic profile and email with Firebase for sign-in. Cloud progress uploads require separate confirmation. No promotional emails.");notice.setPadding(24,16,24,16);
+        AlertDialog dialog=new AlertDialog.Builder(activity).setTitle("Continue with Google").setView(notice).setNegativeButton("Cancel",null).setPositiveButton("Continue",null).create();
+        dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{if(!notice.isChecked()){notice.setError("Please confirm the parent notice.");return;}dialog.dismiss();busy=true;google.request(credential->{if(!live()){busy=false;return;}auth.signInWithCredential(credential).addOnSuccessListener(r->{busy=false;emit("signedIn",r.getUser().getUid(),0,"");message("Signed in with Google","Your player profiles remain on this device. Use Parent account to Save or Restore cloud progress.");}).addOnFailureListener(this::googleFailure);},this::googleFailure);}));dialog.show();
+    }
+    private void googleLink(FirebaseUser user){
+        new AlertDialog.Builder(activity).setTitle("Link Google sign-in?").setMessage("Choose your Google account to add it as a sign-in method for this parent account. Your account ID and cloud save stay the same.").setNegativeButton("Cancel",null).setPositiveButton("Choose Google account",(d,w)->{busy=true;google.request(c->{if(!live()){busy=false;return;}user.linkWithCredential(c).addOnSuccessListener(r->{busy=false;message("Google linked","You can now use Google to sign into this same parent account.");}).addOnFailureListener(this::googleFailure);},this::googleFailure);}).show();
     }
     private EditText input(String hint,int type){EditText x=new EditText(activity);x.setHint(hint);x.setInputType(type);x.setSingleLine(true);return x;}
     private void credentials(boolean create){
@@ -104,16 +120,23 @@ final class ParentAccount {
             }catch(Exception e){fail(e);}
         }).addOnFailureListener(this::fail);
     }
-    private void deletePrompt(FirebaseUser user){EditText password=input("Current account password",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
-        new AlertDialog.Builder(activity).setTitle("Delete account and cloud data?").setMessage("This permanently removes your login and cloud progress. A minimal deletion marker is retained to block old sessions from recreating it. Device saves, recovery copies, exported backups and sent emails are not deleted. Erase device data separately on each device.")
-            .setView(password).setNegativeButton("Cancel",null).setPositiveButton("Delete permanently",(d,w)->{String pass=password.getText().toString();password.setText("");if(pass.isEmpty())return;busy=true;
-                user.reauthenticate(EmailAuthProvider.getCredential(Objects.requireNonNull(user.getEmail()),pass))
-                    .continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return user.getIdToken(true);})
-                    .continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return cloud.runTransaction(tx->{DocumentSnapshot old=tx.get(doc(user));long rev=old.exists()?revision(old):0;tx.set(doc(user),record(rev+1,"deleted",""));return null;});})
-                    .continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return user.delete();})
-                    .addOnSuccessListener(v->{busy=false;auth.signOut();emit("deleted","",0,"");message("Account deleted","Your login and cloud progress were deleted. Erase local progress on each device separately if desired.");})
-                    .addOnFailureListener(e->{busy=false;message("Deletion did not finish","Local progress is unchanged. Cloud data may already have been erased. Open Parent account and retry Delete account with your current password. No new cloud saves can be made after its deletion marker is written.");});
-            }).show();
+    private void deletePrompt(FirebaseUser user){
+        boolean viaGoogle=user.getProviderData().stream().anyMatch(p->GoogleAuthProvider.PROVIDER_ID.equals(p.getProviderId()));
+        EditText password=input("Current account password",InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        AlertDialog.Builder dialog=new AlertDialog.Builder(activity).setTitle("Delete account and cloud data?").setMessage("This permanently removes your login and cloud progress. A minimal deletion marker blocks old sessions from recreating it. Device saves and exported backups are not deleted. "+(viaGoogle?"Choose the same Google account to confirm.":"Enter your current account password."));
+        if(!viaGoogle)dialog.setView(password);
+        dialog.setNegativeButton("Cancel",null).setPositiveButton("Delete permanently",(d,w)->{
+            if(viaGoogle){busy=true;google.request(c->{if(!live()){busy=false;return;}deleteAuthenticated(user,c);},this::googleFailure);}
+            else {String pass=password.getText().toString();password.setText("");if(pass.isEmpty())return;busy=true;deleteAuthenticated(user,EmailAuthProvider.getCredential(Objects.requireNonNull(user.getEmail()),pass));}
+        }).show();
+    }
+    private void deleteAuthenticated(FirebaseUser user,AuthCredential credential){
+        user.reauthenticate(credential)
+            .continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return user.getIdToken(true);})
+            .continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return cloud.runTransaction(tx->{DocumentSnapshot old=tx.get(doc(user));long rev=old.exists()?revision(old):0;tx.set(doc(user),record(rev+1,"deleted",""));return null;});})
+            .continueWithTask(t->{if(!t.isSuccessful())throw Objects.requireNonNull(t.getException());return user.delete();})
+            .addOnSuccessListener(v->{busy=false;auth.signOut();google.clear();emit("deleted","",0,"");message("Account deleted","Your login and cloud progress were deleted. Erase local progress on each device separately if desired.");})
+            .addOnFailureListener(e->{busy=false;message("Deletion did not finish","Local progress is unchanged. Cloud data may already have been erased. Retry Delete account using the same sign-in account. No new cloud saves can be made after its deletion marker is written.");});
     }
     private void emit(String type,String uid,long revision,String payload){if(!live())return;try{JSONObject event=new JSONObject();event.put("type",type);event.put("uid",uid);event.put("revision",revision);event.put("payload",payload);callback.accept(event.toString());}catch(JSONException e){message("Account response unavailable","Reopen Parent account. Local progress is unchanged.");}}
 }

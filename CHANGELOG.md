@@ -1,3 +1,11 @@
+MathQuest 1.2.1 — profile resume and Google account support (configuration pending)
+
+- Reopen the last player and selected math/answer modes automatically.
+- Existing single-player devices resume without re-entering the name. Switch player still opens selection.
+- Add native Google sign-in/signup and optional linking to an existing parent account.
+- Support Google reauthentication for account deletion and credential-state clearing on signout.
+- Google provider activation, release fingerprints and refreshed Firebase configuration are required before release.
+
 MathQuest 1.2.0-beta.2 — Number Challenge icon
 
 - Adopt selected 2, 4, 6, ? number-tile artwork for launcher and player selection.

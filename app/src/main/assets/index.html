@@ -332,7 +332,7 @@
     .playing .header-controls{margin-bottom:8px}.playing #parent-btn,.playing #switch-user-btn{display:none}.playing .stats-board{padding:10px;margin-bottom:10px}.playing .stats-top{margin-bottom:5px}.playing .robux-text{display:none}.playing #cashout-btn{padding:7px 10px;font-size:.85em}.playing .progress-bar-container{height:8px;margin-bottom:10px}.playing #session-label{font-size:.8em;margin:8px 0;color:var(--q-color)}
     #quiz-block{padding:8px 0 12px}.playing .question{font-size:clamp(2.4rem,9vw,3.6rem);margin:10px 0 20px;line-height:1.15}.game-tools{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;border-top:1px solid var(--q-color);padding-top:12px;margin-top:12px}.game-tools button{margin:0;font-size:.8em;padding:10px 4px}.playing #message{font-size:1em;min-height:0;margin:6px 0}.playing #typed-form{margin:0}.playing #typed-answer{box-sizing:border-box;width:100%;font-size:1.5em;margin:10px 0}.playing #typed-submit{margin:0}.playing #next-btn{font-size:1.15em;padding:12px}.playing .option-btn{font-size:1.8em;padding:17px 10px}
     </style>
-    <div id="privacy-modal" class="modal-overlay hidden"><div class="modal"><h2>Privacy &amp; family rewards</h2><p>We never send promotional emails.</p><p>This version saves player names, learning progress, reward rules, requests and parent email addresses on this device. An optional parent account uses Firebase to store your email and password authentication. Parent account offers manual cloud save and restore after email verification. Each upload needs confirmation and includes all household profiles and reward information, but excludes the device PIN. Local changes are not uploaded automatically. We use no promotional emails. Account deletion is available in Parent account; a minimal deletion marker remains to block old sessions from recreating data. Local copies and exported files must be erased separately. Use nicknames rather than children's full names.</p><p>Reward emails open in your email app and are sent only when you press Send. Parents supply all rewards. MathQuest does not pay cash, supply Robux, or have an affiliation with Roblox.</p><p>The GitHub edition contacts GitHub to check for and download updates. The Play edition uses Google Play for updates. Those services receive normal network information such as your IP address. Diagnostics stay on your device unless you export and share them.</p><p>Backups include parent email addresses and the device PIN. Keep them private. There are no ads or advertising analytics in this app.</p><button class="modal-btn btn-parent-action" onclick="eraseDeviceData()">Parent: erase this device's progress</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
+    <div id="privacy-modal" class="modal-overlay hidden"><div class="modal"><h2>Privacy &amp; family rewards</h2><p>We never send promotional emails.</p><p>This version saves player names, learning progress, reward rules, requests and parent email addresses on this device. An optional parent account uses Firebase with email/password or Google sign-in. Google sign-in shares your basic Google profile and email with Firebase for authentication. Your child’s player profile stays separate from the parent account. Parent account offers manual cloud save and restore after email verification. Each upload needs confirmation and includes all household profiles and reward information, but excludes the device PIN. Local changes are not uploaded automatically. We use no promotional emails. Account deletion is available in Parent account; a minimal deletion marker remains to block old sessions from recreating data. Local copies and exported files must be erased separately. Use nicknames rather than children's full names.</p><p>Reward emails open in your email app and are sent only when you press Send. Parents supply all rewards. MathQuest does not pay cash, supply Robux, or have an affiliation with Roblox.</p><p>The GitHub edition contacts GitHub to check for and download updates. The Play edition uses Google Play for updates. Those services receive normal network information such as your IP address. Diagnostics stay on your device unless you export and share them.</p><p>Backups include parent email addresses and the device PIN. Keep them private. There are no ads or advertising analytics in this app.</p><button class="modal-btn btn-parent-action" onclick="eraseDeviceData()">Parent: erase this device's progress</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
     <div id="recovery-modal" class="modal-overlay hidden"><div class="modal"><h2>Let’s get you playing again</h2><p id="recovery-text">Something interrupted the game. Your last saved progress has not been erased.</p><button class="modal-btn btn-confirm" onclick="location.reload()">Reload saved game</button><button class="modal-btn btn-cancel" onclick="AndroidGame.exportDiagnostics()">Save error report</button></div></div>
 
 <div id="adventure-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>🧭 My adventure</h2><p id="adventure-summary"></p><button class="small-btn" onclick="closeModals();showBadges()">My badges</button><button class="small-btn" onclick="closeModals();showDashboard()">Learning progress</button><button class="modal-btn" onclick="startMission('recommended')">Start my 10-question path</button><button class="modal-btn" onclick="startMission('review')">Practice weak skills • 8 questions</button><button class="modal-btn" onclick="startMission('boss')">Guardian challenge • 5 mixed questions</button><div id="adventure-map"></div><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
@@ -541,9 +541,26 @@
             document.getElementById('game-screen').classList.remove('hidden');document.body.classList.add('playing');
             document.getElementById('sync-status').innerText='Saved on this device • Use Parent account for cloud save/restore';
             document.getElementById('message').innerText='';
-            updateStats(false); generateRandomQuestion(); try {initAudio();} catch(e) {}
+            rememberPlayer();updateStats(false); generateRandomQuestion(); try {initAudio();} catch(e) {}
+        }
+        function rememberPlayer(){
+            if(!activeProfile)return;
+            try{localStorage.setItem('mqPlayerSession',JSON.stringify({name:activeProfile.name,op:currentOp,mode,review:reviewMode}));}catch(e){recordFault('SESSION_SAVE_ERROR');}
+        }
+        function resumePlayer(){
+            let last=null;try{last=JSON.parse(localStorage.getItem('mqPlayerSession')||'null');}catch(e){recordFault('SESSION_LOAD_ERROR');}
+            if(last?.paused)return;
+            const p=last&&typeof last.name==='string'?db.profiles.find(p=>p.name===last.name):db.profiles.length===1?db.profiles[0]:null;
+            if(!p)return;
+            document.getElementById('profile-picker').value=String(db.profiles.indexOf(p));
+            document.getElementById('username-input').value=p.name;
+            if(last&&operations.includes(last.op))document.getElementById('math-operation').value=last.op;
+            if(last&&['easy','hard'].includes(last.mode))document.getElementById('answer-mode').value=last.mode;
+            document.getElementById('practice-mode').value=last?.review?'review':'normal';
+            login();
         }
         function logout() {
+            try{localStorage.setItem('mqPlayerSession',JSON.stringify({paused:true}));}catch(e){recordFault('SESSION_SAVE_ERROR');}
             questSession=null;closeModals();document.body.classList.remove('playing'); currentUser='';activeProfile=null;currentParentEmail='';streak=0;dollars=0;
             document.getElementById('game-screen').classList.add('hidden');
             document.getElementById('login-screen').classList.remove('hidden');
@@ -1028,7 +1045,7 @@
             loadComfort();
             if(window.AndroidGame && typeof AndroidGame.distribution==='function' && AndroidGame.distribution()==='play')document.getElementById('update-button').textContent='Updates in Google Play';
             if(window.AndroidGame && typeof AndroidGame.versionName==='function')document.getElementById('native-version').textContent=AndroidGame.versionName();
-            try {readDB();const probe=STORE_KEY+'-probe';localStorage.setItem(probe,'1');localStorage.removeItem(probe);initTheme();renderProfiles();}
+            try {readDB();const probe=STORE_KEY+'-probe';localStorage.setItem(probe,'1');localStorage.removeItem(probe);initTheme();renderProfiles();resumePlayer();}
             catch(e) {recordFault('LOAD_ERROR');storageFailed=true;document.getElementById('login-status').innerText='Local saving is unavailable or data is damaged. Use a regular browser with storage enabled. Existing data has not been overwritten.';document.getElementById('btn-login-text').disabled=true;}
         };
     </script>
