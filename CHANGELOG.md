@@ -1,3 +1,11 @@
+MathQuest 1.3.0 — modern app experience
+
+- Home, bottom navigation and profile/settings sheet with clear local/manual-cloud save status.
+- Guided reward setup and a persistent chosen-reward progress card.
+- Visual math hints, unscored guided retries, brief reward feedback and optional haptics.
+- Includes configurable earning/shop and the temporary testing PIN bypass from 1.2.4.
+- Phone visual and haptic checks remain pending.
+
 MathQuest 1.2.4 — configurable reward shop (testing build)
 
 - Temporarily disable parent PIN while testing; retain the central gate for re-enabling later.
