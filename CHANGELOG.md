@@ -1,3 +1,13 @@
+MathQuest 1.4.0 — learning and feedback
+
+- Add a skippable starting skill check and parent-adjustable practice levels.
+- Schedule spaced reviews across later days; same-day repeats do not imply retention.
+- Add ten frames, arrays, number bonds and optional word problems.
+- Add evidence-based parent summaries and Practice this next.
+- Preview and save feedback with optional sanitized diagnostics; no automatic sending.
+- Celebrate affordable chosen rewards once and offer a request button on Home.
+- Includes the first-run tutorial; PIN remains disabled for testing.
+
 MathQuest 1.3.1 — guided introduction and reward setup
 
 - Add a skippable, replayable first-run tutorial with an interactive practice question.
