@@ -6,7 +6,7 @@ Math Quest 1.1.0-beta.1 — parent account candidate (not promoted)
 - Keep offline gameplay and automatic local saving. Cloud transfers require parent action.
 - Add Firebase emulator security tests and cloud-restore regression tests.
 - Upgrade Android build tooling for current Firebase SDK compatibility.
-- Production rules deployment, real-device validation and Play requirements remain pending.
+- Production rules deployed with approval; real-device validation and Play requirements remain pending.
 
 Math Quest 1.0.1 — Google Play preparation
 

@@ -32,9 +32,9 @@ Implemented behind the device Parent PIN:
 
 ## Deployment status
 
-Production Firestore still uses deny-all rules. `firebase/firestore.rules` is the reviewed candidate. Publishing it is a security-sensitive access change and awaits action-time confirmation. No real signup/verification/reset emails or parent cloud records were created during tests.
+With explicit owner approval, `firebase/firestore.rules` was published to production on 2026-10-04 at 2:18 PM America/Chicago. Firebase Console shows this version as the active starred ruleset. Each account can access only its own household; progress writes require verified email. Emulator tests passed before deployment. No real signup/verification/reset emails or parent cloud records were created during tests.
 
-The candidate is kept on `feature/parent-accounts`, without promoting a GitHub update or submitting to Play. Before promotion, deploy the rules and exercise signup, verification, password reset, cloud save/restore on two Android devices, conflict recovery, deletion retry and a signed upgrade from 1.0.1.
+The candidate is kept on `feature/parent-accounts`, without promoting a GitHub update or submitting to Play. Before promotion, exercise signup, verification, password reset, cloud save/restore on two Android devices, conflict recovery, deletion retry and a signed upgrade from 1.0.1.
 
 Google Play remains blocked on the public support/privacy contact, a public account-deletion route, children's privacy/consent review, store declarations/assets and required device/closed testing. A parent checkbox is not verified parental consent. No paid billing upgrade or Play purchase has been made.
 

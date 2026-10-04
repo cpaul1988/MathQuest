@@ -18,4 +18,4 @@ Firestore uses memory-only SDK caching, and Restore requires a live server respo
 
 ## Publication status
 
-This describes the parent-account candidate, not the currently published 1.0.1 APK. Production cloud access is still awaiting rules deployment. Before Play submission, the developer must supply a public support/privacy contact, publish a stable policy URL, and update this information to describe any enabled account/sync service and its deletion/retention procedures. This document is not a completed Play privacy-policy submission.
+This describes the parent-account candidate, not the currently published 1.0.1 APK. Owner-only production access rules are deployed; real-device validation of this candidate remains pending. Before Play submission, the developer must supply a public support/privacy contact, publish a stable policy URL, and update this information to describe any enabled account/sync service and its deletion/retention procedures. This document is not a completed Play privacy-policy submission.
