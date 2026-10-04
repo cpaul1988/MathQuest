@@ -1,3 +1,12 @@
+MathQuest 1.2.2 — custom milestone rewards
+
+- Parent-PIN protected, per-child custom milestone rewards and on/off toggle.
+- Choose a reward name and target for correct answers, Hard answers, new practice days or badges.
+- Track progress, earned rewards and parent-confirmed fulfilment; preserve history when cancelled.
+- Existing cash/Robux rules and saved progress are preserved.
+- Learning counts from reward creation, including while disabled; enabling unlocks completed targets.
+- Gameplay and reward regression tests passed; physical-device reward UI checks remain pending.
+
 MathQuest 1.2.1 — profile resume and Google account support
 
 - Reopen the last player and selected math/answer modes automatically.

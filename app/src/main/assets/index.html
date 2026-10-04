@@ -278,7 +278,7 @@
             <input type="number" id="parent-add-amount" min="1" step="1" placeholder="Amount to add ($)">
             <button class="modal-btn btn-parent-action" onclick="parentAddMoney()">Add Money</button>
             
-            <fieldset><legend>Reward rules for this player</legend><label><input type="checkbox" id="rule-enabled"> Enable parent-funded rewards</label>
+            <button class="modal-btn btn-parent-action" onclick="showMilestones(true)">Configure milestone rewards</button><fieldset><legend>Reward rules for this player</legend><label><input type="checkbox" id="rule-enabled"> Enable parent-funded rewards</label>
             <label>Correct answers in a row (2–100)<input id="rule-goal" type="number" min="2" max="100" class="login-input"></label>
             <label>Dollars per completed streak (1–100)<input id="rule-award" type="number" min="1" max="100" class="login-input"></label>
             <label>Daily earning limit ($0–1000; 0 = practice only)<input id="rule-cap" type="number" min="0" max="1000" class="login-input"></label>
@@ -336,7 +336,8 @@
     <div id="recovery-modal" class="modal-overlay hidden"><div class="modal"><h2>Let’s get you playing again</h2><p id="recovery-text">Something interrupted the game. Your last saved progress has not been erased.</p><button class="modal-btn btn-confirm" onclick="location.reload()">Reload saved game</button><button class="modal-btn btn-cancel" onclick="AndroidGame.exportDiagnostics()">Save error report</button></div></div>
 
 <div id="adventure-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>🧭 My adventure</h2><p id="adventure-summary"></p><button class="small-btn" onclick="closeModals();showBadges()">My badges</button><button class="small-btn" onclick="closeModals();showDashboard()">Learning progress</button><button class="modal-btn" onclick="startMission('recommended')">Start my 10-question path</button><button class="modal-btn" onclick="startMission('review')">Practice weak skills • 8 questions</button><button class="modal-btn" onclick="startMission('boss')">Guardian challenge • 5 mixed questions</button><div id="adventure-map"></div><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
-<div id="family-rewards-modal" class="modal-overlay hidden"><div class="modal"><h2>Family rewards</h2><p>Parents choose and supply rewards. Learning and adventures work without them.</p><p>Available: $<span id="dollars-text">0</span></p><p>Largest affordable pack: <span id="robux-text">0</span> Robux</p><button id="cashout-btn" class="modal-btn" onclick="closeModals();openCashOutModal()" disabled>Request reward</button><button class="modal-btn" onclick="closeModals();showRequests(false)">Reward history</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
+<div id="milestone-modal" class="modal-overlay hidden"><div class="modal"><h2>Milestone rewards</h2><p id="milestone-status"></p><div id="milestone-editor" class="hidden"><label><input id="milestone-enabled" type="checkbox" onchange="toggleMilestones()"> Enable custom milestone rewards for this player</label><p>Choose a reward your family supplies: extra game time, an outing, cash or Robux. Each reward is earned once. Learning since creation counts, including while rewards are off; rewards unlock when enabled. Existing earned rewards stay earned.</p><label>Reward name<input id="milestone-title" class="login-input" maxlength="80" placeholder="30 minutes of game time"></label><label>Milestone<select id="milestone-kind" class="op-select"><option value="correct">Correct answers</option><option value="hard">Correct answers in Hard mode</option><option value="days">New practice days</option><option value="badges">New badges</option></select></label><label>Target<input id="milestone-target" class="login-input" type="number" min="1" max="10000" value="25"></label><button class="modal-btn" onclick="addMilestone()">Add reward</button></div><div id="milestone-list"></div><button id="milestone-configure" class="modal-btn" onclick="showMilestones(true)">Parent: configure rewards</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
+<div id="family-rewards-modal" class="modal-overlay hidden"><div class="modal"><h2>Family rewards</h2><button class="modal-btn" onclick="showMilestones(false)">Milestone rewards</button><p>Parents choose and supply rewards. Learning and adventures work without them.</p><p>Available: $<span id="dollars-text">0</span></p><p>Largest affordable pack: <span id="robux-text">0</span> Robux</p><button id="cashout-btn" class="modal-btn" onclick="closeModals();openCashOutModal()" disabled>Request reward</button><button class="modal-btn" onclick="closeModals();showRequests(false)">Reward history</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
 <div id="comfort-modal" class="modal-overlay hidden"><div class="modal"><h2>Make it comfortable</h2><label><input id="comfort-sound" type="checkbox" onchange="saveComfort()"> Play sounds</label><label><input id="comfort-motion" type="checkbox" onchange="saveComfort()"> Animated effects</label><label>Text size<select id="comfort-text" onchange="saveComfort()"><option value="1">Standard</option><option value="1.15">Larger</option><option value="1.3">Largest</option></select></label><p>Read aloud uses your device's available voice when supported.</p><button class="modal-btn" onclick="readQuestion()">Read this question aloud</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
 <div id="session-modal" class="modal-overlay hidden"><div class="modal"><h2>Journey complete ✨</h2><p id="session-result"></p><p>Every practice step counts. Your progress is saved.</p><button class="modal-btn" onclick="closeModals();showAdventure()">My adventure</button><button class="modal-btn" onclick="closeModals();generateRandomQuestion()">Keep practicing</button></div></div>
 
@@ -568,7 +569,7 @@
         }
         function saveData() {
             if(!activeProfile || storageFailed) return false;
-            activeProfile.streak=streak;activeProfile.dollars=dollars;
+            activeProfile.streak=streak;activeProfile.dollars=dollars;unlockMilestones();
             const ok=persist(); document.getElementById('sync-status').innerText=ok?'✓ Saved on this device':'Saving failed — reload';return ok;
         }
         function updateStats(shouldSave = true) {
@@ -682,7 +683,7 @@
         }
 
         function closeModals() {
-            ['cashout-modal','parent-modal','requests-modal','dashboard-modal','badges-modal','tasks-modal','game-menu-modal','privacy-modal','adventure-modal','family-rewards-modal','comfort-modal','session-modal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+            ['cashout-modal','parent-modal','requests-modal','dashboard-modal','badges-modal','tasks-modal','game-menu-modal','privacy-modal','adventure-modal','family-rewards-modal','comfort-modal','session-modal','milestone-modal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
             parentAuthorized=false;
         }
         function openCashOutModal() {
@@ -803,7 +804,7 @@
             if(v && v.version===12 && Array.isArray(v.profiles))v.version=13;
         }
         function validateLearning(p){
-            validateJourney(p);
+            validateJourney(p);validateMilestones(p);
             const integer=(v,min,max)=>Number.isSafeInteger(v)&&v>=min&&v<=max;
             const r=p.rules;
             if(!r||(r.enabled!==undefined&&typeof r.enabled!=='boolean')||!integer(r.goal,2,100)||!integer(r.award,1,100)||!integer(r.cap,0,1000)||!integer(r.minimum,1,1000)||Object.hasOwn(r,'rate')||!['cash','robux','both'].includes(r.types))throw Error('Invalid reward rules');
@@ -1030,6 +1031,69 @@
             for(const [theme,name,target,icon] of trailStops){const unlocked=stars>=target,card=document.createElement('div');card.className='map-stop'+(unlocked?'':' locked');const title=document.createElement('h3');title.textContent=icon+' '+name;const desc=document.createElement('p');desc.textContent=unlocked?'Discovered • '+target+' stars':(target-stars)+' more stars to discover';card.append(title,desc);if(unlocked){const button=document.createElement('button');button.className='small-btn';button.textContent='Explore this world';button.onclick=()=>{applyTheme(theme);closeModals();};card.append(button);const pin=document.createElement('button');pin.className='small-btn';pin.textContent=activeProfile.journey?.trailMark===theme?'Pin equipped':'Equip '+icon+' pin';pin.disabled=activeProfile.journey?.trailMark===theme;pin.onclick=()=>{journeyData().trailMark=theme;if(saveData()){updateStats(false);showAdventure();}};card.append(pin);}map.append(card);}
             document.getElementById('adventure-modal').classList.remove('hidden');
         }
+
+        function milestoneValue(p,kind){
+            if(kind==='correct')return Object.values(p.stats).reduce((n,x)=>n+x.correct,0);
+            if(kind==='hard')return p.modes.hard.correct;
+            if(kind==='days')return Object.values(p.days).filter(x=>x.attempts>0).length;
+            return Object.keys(p.badges).length;
+        }
+        function validateMilestones(p){
+            const m=p.milestones;if(m===undefined)return;
+            if(!m||typeof m.enabled!=='boolean'||!Array.isArray(m.items)||m.items.length>100)throw Error('Invalid milestone rewards');
+            const ids=new Set();
+            for(const r of m.items){
+                if(!r||typeof r.id!=='string'||!r.id||r.id.length>80||ids.has(r.id)||typeof r.title!=='string'||!r.title.trim()||r.title.length>80||!['correct','hard','days','badges'].includes(r.kind)||!Number.isSafeInteger(r.target)||r.target<1||r.target>10000||!Number.isSafeInteger(r.start)||r.start<0||!['active','earned','given','cancelled'].includes(r.status)||typeof r.created!=='string'||!Number.isFinite(Date.parse(r.created)))throw Error('Invalid milestone reward');
+                if(['earned','given'].includes(r.status)&&(!r.earned||!Number.isFinite(Date.parse(r.earned))))throw Error('Invalid earned reward');
+                if(r.status==='given'&&(!r.given||!Number.isFinite(Date.parse(r.given))))throw Error('Invalid fulfilled reward');ids.add(r.id);
+            }
+        }
+        function unlockMilestones(){
+            const m=activeProfile?.milestones;if(!m?.enabled)return;
+            for(const r of m.items)if(r.status==='active'&&milestoneValue(activeProfile,r.kind)-r.start>=r.target){r.status='earned';r.earned=new Date().toISOString();}
+        }
+        function showMilestones(edit=false){
+            if(!activeProfile)return;
+            if(edit&&!parentAuthorized&&!authorizeParent())return;
+            closeModals();parentAuthorized=edit;
+            document.getElementById('milestone-editor').classList.toggle('hidden',!edit);
+            document.getElementById('milestone-configure').classList.toggle('hidden',edit);
+            renderMilestones();document.getElementById('milestone-modal').classList.remove('hidden');
+        }
+        function renderMilestones(){
+            const m=activeProfile.milestones||{enabled:false,items:[]};
+            document.getElementById('milestone-enabled').checked=m.enabled;
+            document.getElementById('milestone-status').textContent=m.enabled?'Work toward your family’s rewards.':'Custom rewards are off. Your learning and earned rewards are safe.';
+            const list=document.getElementById('milestone-list');list.replaceChildren();
+            if(!m.items.length)list.textContent='No custom rewards yet. A parent can add one.';
+            const labels={correct:'correct answers',hard:'Hard-mode correct answers',days:'new practice days',badges:'new badges'};
+            for(const r of m.items){
+                const card=document.createElement('div');card.className='task-card';const title=document.createElement('h3');title.textContent=r.title;
+                const line=document.createElement('p');line.textContent=r.status==='active'?Math.min(r.target,Math.max(0,milestoneValue(activeProfile,r.kind)-r.start))+' / '+r.target+' '+labels[r.kind]:({earned:'Earned — waiting for your parent',given:'Given by parent',cancelled:'Cancelled by parent'}[r.status]);card.append(title,line);
+                if(parentAuthorized&&['active','earned'].includes(r.status)){const b=document.createElement('button');b.className='modal-btn';b.textContent=r.status==='earned'?'Mark as given':'Cancel reward';b.onclick=()=>finishMilestone(r.id);card.append(b);}list.append(card);
+            }
+        }
+        function toggleMilestones(){
+            if(!parentAuthorized||storageFailed)return;
+            activeProfile.milestones??={enabled:false,items:[]};activeProfile.milestones.enabled=document.getElementById('milestone-enabled').checked;
+            if(saveData())renderMilestones();
+        }
+        function addMilestone(){
+            if(!parentAuthorized||storageFailed)return;
+            const title=document.getElementById('milestone-title').value.trim(),kind=document.getElementById('milestone-kind').value,target=Number(document.getElementById('milestone-target').value);
+            if(!title||title.length>80||!['correct','hard','days','badges'].includes(kind)||!Number.isSafeInteger(target)||target<1||target>10000){alert('Enter a reward name and a whole-number target from 1 to 10,000.');return;}
+            activeProfile.milestones??={enabled:false,items:[]};const m=activeProfile.milestones;if(m.items.length>=100){alert('This player has reached the limit of 100 reward records.');return;}
+            m.items.push({id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),title,kind,target,start:milestoneValue(activeProfile,kind),status:'active',created:new Date().toISOString()});
+            if(saveData()){document.getElementById('milestone-title').value='';renderMilestones();}
+        }
+        function finishMilestone(id){
+            if(!parentAuthorized||storageFailed)return;
+            const r=activeProfile.milestones?.items.find(r=>r.id===id);if(!r||!['active','earned'].includes(r.status))return;
+            if(!confirm(r.status==='earned'?'Have you given this reward to your child?':'Cancel this unearned reward? It will remain in history.'))return;
+            if(r.status==='earned'){r.status='given';r.given=new Date().toISOString();}else r.status='cancelled';
+            if(saveData())renderMilestones();
+        }
+
         function showRewards(){if(!activeProfile)return;closeModals();updateStats(false);document.getElementById('family-rewards-modal').classList.remove('hidden');}
         function loadComfort(){try{const x=JSON.parse(localStorage.getItem('mqComfort')||'{}');comfort={sound:x.sound!==false,motion:x.motion!==false,text:['1','1.15','1.3'].includes(x.text)?x.text:'1'};}catch(e){}applyComfort();}
         function applyComfort(){document.body.classList.toggle('reduced-motion',!comfort.motion);document.documentElement.style.fontSize=(16*Number(comfort.text))+'px';}
