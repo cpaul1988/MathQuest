@@ -1,0 +1,10 @@
+.gradle/
+**/build/
+local.properties
+*.jks
+*.keystore
+private-signing/
+*.apk
+*.zip
+node_modules/
+release/

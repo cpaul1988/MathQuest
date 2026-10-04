@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math for Robux! — Quests & Badges</title>
+    <style>
+        :root {
+            /* Default Classic Theme */
+            --bg: #e0f7fa;
+            --container: white;
+            --text: #333;
+            --border: none;
+            --heading: #00838f;
+            --input-bg: white;
+            --input-border: 2px solid #29b6f6;
+            --input-text: #333;
+            --btn-bg: #ff9800;
+            --btn-text: white;
+            --btn-hover: #f57c00;
+            --panel-bg: #fff9c4;
+            --panel-border: 2px solid #fbc02d;
+            --stat-text: #f57f17;
+            --money: #2e7d32;
+            --robux: #c62828;
+            --progress-bg: #e0e0e0;
+            --progress-fill: #4caf50;
+            --q-color: #1565c0;
+            --opt-bg: white;
+            --opt-text: #0277bd;
+            --opt-border: 3px solid #29b6f6;
+            --opt-hover: #29b6f6;
+            --opt-hover-text: white;
+            --modal-bg: white;
+            --modal-text: #333;
+            --overlay: rgba(0,0,0,0.7);
+            --text-shadow: none;
+            --box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            --correct-bg: #66bb6a;
+            --correct-border: #43a047;
+            --correct-text: white;
+            --correct-shadow: none;
+            --incorrect-bg: #ef5350;
+            --incorrect-border: #e53935;
+            --incorrect-text: white;
+            --small-btn: #9e9e9e;
+            --small-btn-hover: #757575;
+            --cashout-bg: #4caf50;
+            --cashout-text: white;
+            --cashout-hover: #388e3c;
+            --cashout-dis: #a5d6a7;
+            --next-btn: #ff9800;
+            --next-hover: #f57c00;
+            --msg-win: #2e7d32;
+            --msg-good: #2e7d32;
+            --msg-bad: #c62828;
+            --msg-cash: #f57f17;
+            --sync-color: #1976d2;
+        }
+
+        /* --- THEMES --- */
+        body.theme-winter {
+            --bg: #e0f7fa; --container: #b3e5fc; --heading: #0277bd; --btn-bg: #03a9f4; --opt-border: 3px solid #0288d1; --progress-fill: #00bcd4; --q-color: #01579b; --opt-hover: #03a9f4;
+        }
+        body.theme-spring {
+            --bg: #fce4ec; --container: #f8bbd0; --heading: #c2185b; --btn-bg: #e91e63; --opt-border: 3px solid #d81b60; --progress-fill: #ec407a; --q-color: #880e4f; --opt-hover: #e91e63;
+        }
+        body.theme-summer {
+            --bg: #fff9c4; --container: #ffecb3; --heading: #f57f17; --btn-bg: #ffca28; --btn-text: #333; --opt-border: 3px solid #ffb300; --progress-fill: #ffa000; --q-color: #e65100; --opt-hover: #ffca28; --opt-hover-text: #333;
+        }
+        body.theme-school {
+            --bg: #fff3e0; --container: #ffe0b2; --heading: #e65100; --btn-bg: #f4511e; --opt-border: 3px solid #e64a19; --progress-fill: #ff7043; --q-color: #bf360c; --opt-hover: #f4511e;
+        }
+        body.theme-thanksgiving {
+            --bg: #efebe9; --container: #d7ccc8; --heading: #5d4037; --btn-bg: #8d6e63; --opt-border: 3px solid #6d4c41; --progress-fill: #a1887f; --q-color: #3e2723; --opt-hover: #8d6e63;
+        }
+        body.theme-holiday {
+            --bg: #e8f5e9; --container: #c8e6c9; --heading: #1b5e20; --btn-bg: #d32f2f; --opt-border: 3px solid #c62828; --progress-fill: #43a047; --q-color: #b71c1c; --opt-hover: #d32f2f; --opt-hover-text: white;
+        }
+        body.spooky-theme {
+            --bg: #1a0a29; --container: #2d1645; --text: #f5f5f5; --border: 2px solid #ff7300; --heading: #ff8c00; --input-bg: #1a0a29; --input-border: 2px solid #9c27b0; --input-text: #fff; --btn-bg: #ff7300; --btn-text: #1a0a29; --btn-hover: #e65c00; --panel-bg: #1a0a29; --panel-border: 2px solid #ff7300; --stat-text: #ffb74d; --money: #69f0ae; --robux: #ff5252; --progress-bg: #11041c; --progress-fill: #ff7300; --q-color: #b388ff; --opt-bg: #1a0a29; --opt-text: #ffb74d; --opt-border: 3px solid #ff7300; --opt-hover: #ff7300; --opt-hover-text: #1a0a29; --modal-bg: #2d1645; --modal-text: #fff; --overlay: rgba(0,0,0,0.85); --text-shadow: 2px 2px 4px #000; --box-shadow: 0 8px 16px rgba(0,0,0,0.8); --correct-bg: #00c853; --correct-border: #00e676; --correct-text: #1a0a29; --correct-shadow: 0 0 15px #00e676; --incorrect-bg: #d50000; --incorrect-border: #ff1744; --incorrect-text: white; --small-btn: #512da8; --small-btn-hover: #673ab7; --cashout-bg: #00c853; --cashout-text: #1a0a29; --cashout-hover: #00e676; --cashout-dis: #1b5e20; --next-btn: #9c27b0; --next-hover: #ab47bc; --msg-win: #69f0ae; --msg-good: #ffb74d; --msg-bad: #ff5252; --msg-cash: #ff8c00; --sync-color: #69f0ae;
+        }
+
+        body { 
+            font-family: 'Comic Sans MS', Arial, sans-serif; 
+            max-width: 600px; 
+            margin: 40px auto; 
+            padding: 20px; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            overflow-x: hidden; 
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        .container { 
+            background-color: var(--container); 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: var(--box-shadow); 
+            text-align: center; 
+            position: relative; 
+            border: var(--border); 
+            z-index: 10; 
+            transition: all 0.3s ease;
+        }
+        
+        h1 { color: var(--heading); font-size: 2.5em; margin-bottom: 10px; text-shadow: var(--text-shadow); }
+
+        /* Login Screen Styles */
+        #login-screen { display: flex; flex-direction: column; align-items: center; gap: 15px; padding: 20px 0; }
+        .login-input { font-size: 1.2em; padding: 10px; border: var(--input-border); border-radius: 10px; text-align: center; width: 80%; background-color: var(--input-bg); color: var(--input-text); }
+        .op-select { font-size: 1.2em; padding: 10px; border: var(--input-border); border-radius: 10px; width: 85%; background-color: var(--input-bg); color: var(--input-text); font-weight: bold; cursor: pointer; }
+        .login-btn { font-size: 1.5em; padding: 12px 30px; background-color: var(--btn-bg); color: var(--btn-text); border: none; border-radius: 10px; cursor: pointer; font-weight: bold; width: 85%; margin-top: 10px; }
+        .login-btn:hover { background-color: var(--btn-hover); }
+
+        /* Main App Styles */
+        .header-controls { display: flex; justify-content: space-between; margin-bottom: 15px; }
+        .small-btn { padding: 8px 12px; font-size: 0.9em; background-color: var(--small-btn); color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .small-btn:hover { background-color: var(--small-btn-hover); }
+        #sync-status { font-size: 0.9em; color: var(--sync-color); font-weight: bold; margin-top: 5px; }
+
+        .stats-board { display: flex; flex-direction: column; gap: 15px; background-color: var(--panel-bg); padding: 15px; border-radius: 10px; border: var(--panel-border); margin-bottom: 20px; }
+        .stats-top { display: flex; justify-content: space-between; align-items: center; }
+        .stat-item { font-size: 1.3em; font-weight: bold; color: var(--stat-text); }
+        .money-text { color: var(--money); font-size: 1.4em;}
+        .robux-text { color: var(--robux); font-size: 1.4em;}
+
+        #cashout-btn { padding: 10px 15px; font-size: 1.1em; background-color: var(--cashout-bg); color: var(--cashout-text); border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+        #cashout-btn:hover:not(:disabled) { background-color: var(--cashout-hover); }
+        #cashout-btn:disabled { background-color: var(--cashout-dis); color: rgba(255,255,255,0.7); cursor: not-allowed; opacity: 0.7; }
+
+        .progress-bar-container { width: 100%; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 20px; overflow: hidden; height: 20px; }
+        .progress-bar { height: 100%; background-color: var(--progress-fill); width: 0%; transition: width 0.3s ease; }
+
+        .question { font-size: 3.5em; margin-bottom: 20px; color: var(--q-color); text-shadow: var(--text-shadow); }
+        
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+        .option-btn { padding: 25px; font-size: 1.8em; cursor: pointer; border: var(--opt-border); background-color: var(--opt-bg); color: var(--opt-text); border-radius: 12px; transition: 0.2s; font-weight: bold;}
+        .option-btn:hover:not(:disabled) { background-color: var(--opt-hover); color: var(--opt-hover-text); }
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.8; }
+        
+        .correct { background-color: var(--correct-bg) !important; border-color: var(--correct-border) !important; color: var(--correct-text) !important; box-shadow: var(--correct-shadow); }
+        .incorrect { background-color: var(--incorrect-bg) !important; border-color: var(--incorrect-border) !important; color: var(--incorrect-text) !important; }
+        
+        .hidden { display: none !important; }
+        
+        #message { font-size: 1.3em; font-weight: bold; margin-bottom: 15px; min-height: 35px; }
+        
+        #next-btn { width: 100%; padding: 15px; font-size: 1.5em; background-color: var(--next-btn); color: var(--btn-text); border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+        #next-btn:hover { background-color: var(--next-hover); }
+
+        /* Animations */
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+
+        .particle-overlay {
+            position: fixed; top: 100%; font-size: 4em; pointer-events: none; z-index: 9999;
+            animation: floatUp 3s ease-in forwards;
+        }
+        @keyframes floatUp {
+            0% { top: 100%; opacity: 1; transform: scale(1) rotate(0deg); }
+            100% { top: -20%; opacity: 0; transform: scale(1.5) rotate(15deg); }
+        }
+
+        /* Modal Styles */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--overlay); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal { background: var(--modal-bg); padding: 25px; border-radius: 15px; text-align: center; max-width: 350px; width: 90%; box-shadow: var(--box-shadow); border: var(--border); color: var(--modal-text);}
+        .modal h2 { margin-top: 0; color: var(--heading); }
+        .modal input { width: 80%; padding: 10px; font-size: 1.2em; margin: 15px 0; text-align: center; border: var(--input-border); border-radius: 8px; background-color: var(--input-bg); color: var(--input-text);}
+        .modal-btns { display: flex; justify-content: space-around; gap: 10px; flex-wrap: wrap;}
+        .modal-btn { flex: 1; padding: 10px 15px; font-size: 1.1em; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; min-width: 100px; margin-top: 5px;}
+        .btn-confirm { background-color: var(--correct-bg); color: var(--correct-text); }
+        .btn-confirm:hover { filter: brightness(1.1); }
+        .btn-cancel { background-color: var(--incorrect-bg); color: white; }
+        .btn-cancel:hover { filter: brightness(1.1); }
+        .btn-parent-action { background-color: var(--small-btn); color: white; width: 100%; margin-bottom: 10px;}
+        .btn-parent-action:hover { background-color: var(--small-btn-hover); }
+    </style>
+</head>
+<body>
+    <div id="theme-scene" aria-hidden="true"></div><div class="container" id="main-container"><div class="world-banner"><span id="world-icon"></span><div><small>YOUR MATH ADVENTURE</small><h2 id="world-title"></h2><p id="world-caption"></p></div></div>
+        
+        <!-- Login Screen -->
+        <div id="login-screen">
+            <h1 id="app-title">Math for Robux! 🚀</h1>
+            <p id="app-subtitle" style="font-size: 1.2em; color: var(--q-color);">Enter your name to load your progress</p>
+            
+            <input type="text" id="username-input" class="login-input" placeholder="Your Name" autocomplete="off">
+            <select id="profile-picker" class="op-select" onchange="pickProfile(this.value)"><option value="">New player…</option></select>
+            <p style="font-size:.9em">Local edition • Progress stays in this browser on this device. Use the same file and browser each time. Clearing browser data may erase it.</p>
+            <button class="small-btn" onclick="exportBackup()">Export backup</button>
+            <button class="small-btn" onclick="document.getElementById('backup-input').click()">Restore backup</button>
+            <input id="backup-input" type="file" accept="application/json,.json" hidden onchange="importBackup(this)">
+            <p style="font-size:.85em">Parent: set up this device’s PIN before children play. This is a household control, not a secure online account.</p>
+            
+            <select id="math-operation" class="op-select">
+                <option value="multiplication">✖️ Multiplication (x)</option>
+                <option value="division">➗ Division (÷)</option>
+                <option value="addition">➕ Addition (+)</option>
+                <option value="subtraction">➖ Subtraction (-)</option>
+            </select>
+
+            <label for="answer-mode">Answer mode</label><select id="answer-mode" class="op-select"><option value="easy">Easy • Multiple choice</option><option value="hard">Hard • Type your answer</option></select>
+            <label for="practice-mode">Practice</label><select id="practice-mode" class="op-select"><option value="normal">Regular practice</option><option value="review">Review weak skills in selected operation</option></select>
+            <button class="login-btn" onclick="login()" id="btn-login-text">Play Now!</button>
+            <div id="login-status"></div>
+        </div>
+
+        <!-- Main Game Screen (Hidden initially) -->
+        <div id="game-screen" class="hidden">
+            <div class="header-controls">
+                <button id="parent-btn" class="small-btn" onclick="openParentPanel()">⚙️ Parent Panel</button>
+                <div style="font-weight: bold; color: var(--stat-text);">Player: <span id="display-username"></span></div>
+                <button id="switch-user-btn" class="small-btn" onclick="logout()">🔄 Switch User</button>
+            </div>
+
+            
+            <div class="stats-board">
+                <div class="stats-top">
+                    <div class="stat-item">Streak: <span id="streak-text">0</span> / <span id="streak-goal">10</span></div>
+                    <div class="stat-item">
+                        Available: <span class="money-text">$<span id="dollars-text">0</span></span><br>
+                        <span class="robux-text">Largest affordable pack: <span id="robux-text">0</span> Robux</span>
+                    </div>
+                </div>
+                <button id="cashout-btn" onclick="openCashOutModal()" disabled>Cash Out 💵</button>
+            </div>
+
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="streak-bar"></div>
+            </div>
+
+            <p id="session-label"></p>
+            <div id="quiz-block">
+                <div class="question" id="question-text"></div>
+                <div class="options" id="options-container"></div>
+                <form id="typed-form" class="hidden" novalidate><label for="typed-answer">Your answer</label><input id="typed-answer" class="login-input" type="text" inputmode="numeric" enterkeyhint="done" autocomplete="off" placeholder="Type a whole number"><button type="button" id="typed-submit" class="login-btn">Check answer</button><p id="typed-hint" aria-live="polite"></p></form>
+                <button id="next-btn" class="hidden" onclick="loadNextQuestion()">Next Question ➡️</button>
+            </div>
+            <div id="message" aria-live="polite"></div>
+            <nav class="game-tools" aria-label="Game extras">
+                <button class="small-btn" onclick="showTasks()">🎯 Daily tasks</button>
+                <button class="small-btn" onclick="showBadges()">🏅 Badges</button>
+                <button class="small-btn" onclick="showDashboard()">📊 Progress</button>
+                <button class="small-btn" onclick="openGameMenu()">☰ More</button>
+            </nav>
+        </div>
+    </div>
+    <div id="tasks-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>🎯 Daily tasks</h2><div id="daily-missions"></div><p id="badge-notice" aria-live="polite"></p><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
+    <div id="game-menu-modal" class="modal-overlay hidden"><div class="modal"><h2>Game options</h2><button class="modal-btn btn-parent-action" onclick="AndroidGame.checkUpdates()">Check for updates</button><button class="modal-btn btn-parent-action" onclick="AndroidGame.exportDiagnostics()">Export error report</button><button class="modal-btn btn-parent-action" onclick="exportBackup()">Export progress backup</button><small>Math Quest <span id="native-version">1.0.0</span> • Progress stays on this device</small><p id="reward-rule-summary"></p><div id="sync-status"></div><button class="modal-btn btn-parent-action" onclick="closeModals();toggleReview()" id="review-toggle">Review weak skills</button><button class="modal-btn btn-parent-action" onclick="closeModals();showRequests(false)">Reward requests</button><button class="modal-btn btn-parent-action" onclick="closeModals();openParentPanel()">Parent controls</button><button class="modal-btn btn-parent-action" onclick="logout()">Switch player / mode</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
+
+    <!-- Cash Out Modal -->
+    <div id="cashout-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h2>Cash Out 💵</h2>
+            <p>You have $<span id="modal-available">0</span> available.</p>
+            <label for="reward-type">Reward type</label><select id="reward-type" class="op-select" onchange="refreshCashoutFields()"><option value="cash">Cash</option><option value="robux">Robux</option></select>
+            <p id="cash-amount-label">Cash reward amount in whole dollars:</p><label id="pack-label" for="robux-package">Choose a Robux package</label><select id="robux-package" class="op-select"></select>
+            <p id="cashout-rule"></p><p>A request reserves this balance and opens an email draft. You must press Send in your email app.</p>
+            <input type="number" id="cashout-amount" min="1" step="1" placeholder="Enter amount">
+            <div class="modal-btns">
+                <button class="modal-btn btn-cancel" onclick="closeModals()">Cancel</button>
+                <button class="modal-btn btn-confirm" onclick="processCashOut()">Save request & open email</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Parent Panel Modal -->
+    <div id="parent-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h2>⚙️ Parent Controls</h2>
+            <label for="parent-email-setting">Parent email for this player</label>
+            <input id="parent-email-setting" type="email" class="login-input" placeholder="parent@example.com">
+            <button class="modal-btn btn-parent-action" onclick="saveParentEmail()">Save parent email</button>
+            <button class="modal-btn btn-parent-action" onclick="showRequests(true)">Manage reward requests</button>
+            <p>Modify <span id="parent-target-user"></span>'s total balance.</p>
+            <input type="number" id="parent-add-amount" min="1" step="1" placeholder="Amount to add ($)">
+            <button class="modal-btn btn-parent-action" onclick="parentAddMoney()">Add Money</button>
+            
+            <fieldset><legend>Reward rules for this player</legend>
+            <label>Correct answers in a row (2–100)<input id="rule-goal" type="number" min="2" max="100" class="login-input"></label>
+            <label>Dollars per completed streak (1–100)<input id="rule-award" type="number" min="1" max="100" class="login-input"></label>
+            <label>Daily earning limit ($0–1000; 0 = practice only)<input id="rule-cap" type="number" min="0" max="1000" class="login-input"></label>
+            <label>Minimum cash-out ($1–1000)<input id="rule-min" type="number" min="1" max="1000" class="login-input"></label>
+            <details><summary>🔒 Fixed Robux package prices</summary><p>Based on your October 4, 2026 screenshot, rounded to the nearest dollar. Prices are not editable. This offline snapshot excludes tax and does not update automatically.</p><p>80 → $1 · 400 → $5 · 800 → $10 · 1,200 → $15 · 1,700 → $20 · 3,150 → $35 · 4,500 → $50 · 10,000 → $100 · 22,500 → $200</p><p>The 4,500 package was marked “For you” in the screenshot; parents should check availability before fulfillment.</p></details>
+            <label>Allowed rewards<select id="rule-types" class="op-select"><option value="both">Cash and Robux</option><option value="cash">Cash only</option><option value="robux">Robux only</option></select></label>
+            <p>Whole-dollar rewards. Daily missions earn badges, not extra money. Daily limits follow this device’s date; parent-added money is separate.</p>
+            <button class="modal-btn btn-parent-action" onclick="saveRewardRules()">Save reward rules</button></fieldset>
+            <!-- THEME SELECTOR -->
+            <select id="theme-selector" class="op-select" onchange="applyTheme(this.value)" style="margin-bottom: 10px;">
+                <option value="auto">🌟 Auto (By Month)</option>
+                <option value="classic">🚀 Classic</option>
+                <option value="winter">❄️ Winter Freeze</option>
+                <option value="spring">🌷 Spring Bloom</option>
+                <option value="summer">☀️ Summer Splash</option>
+                <option value="school">🍎 Back to School</option>
+                <option value="spooky">🎃 Spooky Graveyard</option>
+                <option value="thanksgiving">🦃 Thanksgiving Feast</option>
+                <option value="holiday">🎄 Winter Holidays</option>
+            </select>
+
+            <button class="modal-btn btn-parent-action" onclick="parentResetAll()" style="background-color: var(--incorrect-bg);">Reset this player’s progress</button>
+            <button class="modal-btn btn-cancel" onclick="closeModals()" style="width: 100%;">Close Panel</button>
+        </div>
+    </div>
+
+    <div id="requests-modal" class="modal-overlay hidden"><div class="modal"><h2>Reward requests</h2><p>Saved locally. Email drafts are not proof of delivery. Pending amounts are already reserved.</p><div id="requests-list"></div><button class="modal-btn btn-cancel" onclick="closeModals()">Close</button></div></div>
+    <div id="dashboard-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>📊 Progress dashboard</h2><p id="dashboard-name"></p><div id="dashboard-body"></div><button class="modal-btn btn-cancel" onclick="closeModals()">Close</button></div></div>
+    <style>.mission-box{margin:15px 0;padding:12px;border:1px solid var(--q-color);border-radius:12px;text-align:left}.mission-box p{margin:8px 0}.dashboard{width: min(680px,90vw)}.dashboard table{width:100%;border-collapse:collapse;font-size:.9em}.dashboard th,.dashboard td{padding:8px 4px;border-bottom:1px solid currentColor;text-align:left}fieldset{margin:15px 0;border-radius:12px}fieldset label{display:block;text-align:left}#typed-form{margin:12px 0}#session-label{font-weight:bold}.modal {max-height:85vh;overflow-y:auto}.request-card{padding:12px;margin:10px 0;border:1px solid currentColor;border-radius:10px;overflow-wrap:anywhere}.request-card button{margin:5px;padding:10px}button,input,select{touch-action:manipulation} .header-controls{flex-wrap:wrap;gap:8px}</style>
+    <div id="badges-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>🏅 Your badge collection</h2><p id="badge-count"></p><div id="badge-grid"></div><button class="modal-btn btn-cancel" onclick="closeModals()">Close collection</button></div></div>
+    <style>
+    body{font-family:system-ui,-apple-system,Arial,sans-serif;max-width:680px;margin:24px auto;background-image:radial-gradient(ellipse at top left,#ffffff0b,transparent 60%);background-attachment:fixed}
+    .container{position:relative;border:1px solid var(--q-color);box-shadow:0 24px 80px #0007;border-radius:24px;padding:24px;background-image:linear-gradient(145deg,#ffffff08,transparent 45%)}
+    #theme-scene{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:-1}#theme-scene span{position:absolute;opacity:.32;animation:drift 13s ease-in-out infinite alternate}
+    @keyframes drift{to{transform:translate(20px,-35px) rotate(18deg)}}
+    .world-banner{display:flex;align-items:center;gap:18px;padding:20px;text-align:left;background:linear-gradient(125deg,var(--bg),transparent);border-radius:18px;border-bottom:2px solid var(--heading);margin-bottom:22px;position:relative;overflow:hidden}.world-banner small{font-size:10px;letter-spacing:2px;color:var(--q-color)}.world-banner h2{margin:6px 0;color:var(--heading);font-size:1.5em}.world-banner p{margin:0;font-size:.85em}.world-banner #world-icon{font-size:3.2em;filter:drop-shadow(0 4px 8px #0007)}
+    body[data-world="school"] .world-banner{background-image:repeating-linear-gradient(0deg,transparent 0 23px,#fff1 24px),linear-gradient(120deg,#142f32,transparent)}
+    body[data-world="winter"] .world-banner{background-image:linear-gradient(150deg,#52e1bb33,transparent 45%),linear-gradient(35deg,#5573fc44,transparent 60%)}
+    body[data-world="summer"] .world-banner{background-image:radial-gradient(circle at 90% 110%,#ffc57699 0 45px,transparent 46px),linear-gradient(15deg,#2db2b733,transparent)}
+    body[data-world="spring"] .world-banner{border-radius:35px 12px 35px 12px;background-image:radial-gradient(circle at right,#e678b133,transparent 70%)}
+    body[data-world="holiday"] .world-banner{border-top:4px dotted #ffcd69;background-image:linear-gradient(145deg,#f9737344,transparent 60%)}
+    body[data-world="thanksgiving"] .world-banner{background-image:repeating-linear-gradient(45deg,#cf873811 0 8px,transparent 8px 16px)}
+    body[data-world="spooky"] .world-banner{background-image:radial-gradient(circle at 95% 20%,#ffe4aa66 0 22px,transparent 23px),linear-gradient(120deg,#321247,transparent)}
+    .task-card{padding:8px 10px;margin-top:9px;background:var(--bg);border-radius:10px}.task-card p{font-size:.9em}.task-card.completed{box-shadow:inset 3px 0 #a9f5c9}.task-card progress{width:100%;height:8px;accent-color:var(--heading)}summary{cursor:pointer;font-weight:700;color:var(--heading)}#badge-notice{font-weight:700;color:var(--money)}
+    #badge-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.badge-card{padding:16px 10px;border:1px solid var(--q-color);border-radius:16px;background:var(--bg);text-align:center;overflow-wrap:anywhere}.badge-card.locked{opacity:.6}.badge-card.earned{border-color:var(--heading);box-shadow:inset 0 0 24px #ffca5710}.badge-emblem{font-size:2.3em;margin-bottom:9px}.badge-card p{font-size:.8em}.badge-card small{font-size:.7em}.robux-text{font-size:.85em!important}.small-btn{min-height:40px;margin:3px}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--heading);outline-offset:3px}fieldset{border-color:var(--q-color)}.question{font-variant-numeric:tabular-nums}
+    @media(max-width:480px){body{padding:10px;margin:8px auto}.container{padding:15px}.world-banner{padding:14px;gap:10px}.world-banner h2{font-size:1.2em}.world-banner #world-icon{font-size:2.5em}.modal{box-sizing:border-box;max-width:94vw}.header-controls{justify-content:center}.stats-top{gap:10px}.badge-card{padding:12px 7px}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+    </style>
+    <style>
+    body.playing{margin:10px auto}.playing .world-banner{padding:8px 12px;margin-bottom:10px;gap:10px}.playing .world-banner h2{font-size:1em;margin:0}.playing .world-banner #world-icon{font-size:1.7em}.playing .world-banner small,.playing .world-banner p{display:none}
+    .playing .header-controls{margin-bottom:8px}.playing #parent-btn,.playing #switch-user-btn{display:none}.playing .stats-board{padding:10px;margin-bottom:10px}.playing .stats-top{margin-bottom:5px}.playing .robux-text{display:none}.playing #cashout-btn{padding:7px 10px;font-size:.85em}.playing .progress-bar-container{height:8px;margin-bottom:10px}.playing #session-label{font-size:.8em;margin:8px 0;color:var(--q-color)}
+    #quiz-block{padding:8px 0 12px}.playing .question{font-size:clamp(2.4rem,9vw,3.6rem);margin:10px 0 20px;line-height:1.15}.game-tools{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-top:1px solid var(--q-color);padding-top:12px;margin-top:12px}.game-tools button{margin:0;font-size:.8em;padding:10px 4px}.playing #message{font-size:1em;min-height:0;margin:6px 0}.playing #typed-form{margin:0}.playing #typed-answer{box-sizing:border-box;width:100%;font-size:1.5em;margin:10px 0}.playing #typed-submit{margin:0}.playing #next-btn{font-size:1.15em;padding:12px}.playing .option-btn{font-size:1.8em;padding:17px 10px}
+    </style>
+    <div id="recovery-modal" class="modal-overlay hidden"><div class="modal"><h2>Let’s get you playing again</h2><p id="recovery-text">Something interrupted the game. Your last saved progress has not been erased.</p><button class="modal-btn btn-confirm" onclick="location.reload()">Reload saved game</button><button class="modal-btn btn-cancel" onclick="AndroidGame.exportDiagnostics()">Save error report</button></div></div>
+    <script>
+        function recordFault(code){try{if(window.AndroidGame)AndroidGame.recordError(code);}catch(ignore){}}
+        function showRecovery(code){recordFault(code);const el=document.getElementById('recovery-modal');if(el)el.classList.remove('hidden');}
+        window.addEventListener('error',event=>{showRecovery('SCRIPT_ERROR');});
+        window.addEventListener('unhandledrejection',event=>{event.preventDefault();showRecovery('PROMISE_ERROR');});
+    </script>
+    <script>
+        const STORE_KEY = 'robuxMathLocalV10';
+        // User-supplied Roblox purchase screenshot, 2026-10-04; prices rounded to nearest USD.
+        const ROBUX_PACKAGES=Object.freeze([[80,1],[400,5],[800,10],[1200,15],[1700,20],[3150,35],[4500,50],[10000,100],[22500,200]].map(([robux,cost])=>Object.freeze({robux,cost})));
+        function affordablePack(balance){return ROBUX_PACKAGES.filter(p=>p.cost<=balance).at(-1)?.robux||0;}
+        let db, storedRaw, activeProfile = null, parentAuthorized = false, storageFailed = false;
+        function freshDB() { return {version:12,pin:'',profiles:[]}; }
+        function readDB() {
+            storedRaw = localStorage.getItem(STORE_KEY);
+            db = storedRaw ? JSON.parse(storedRaw) : freshDB();
+            migrateDB(db); validateDB(db);
+        }
+        function validateDB(v) {
+            const whole = n => Number.isSafeInteger(n) && n >= 0;
+            if (!v || v.version !== 12 || typeof v.pin !== 'string' || (v.pin && !/^\d{4,8}$/.test(v.pin)) || !Array.isArray(v.profiles)) throw Error('Invalid backup');
+            const names = new Set();
+            for (const p of v.profiles) {
+                if (!p || typeof p.name !== 'string' || !p.name.trim() || p.name.length>40 || names.has(p.name.toLowerCase()) || !whole(p.dollars) || p.dollars>1000000 || !whole(p.streak) || p.streak>=p.rules.goal || typeof p.email!=='string' || (p.email && !validEmail(p.email)) || !Array.isArray(p.requests)) throw Error('Invalid player data');
+                validateLearning(p);
+                names.add(p.name.toLowerCase());
+                const ids = new Set();
+                for (const r of p.requests) {
+                    if (!r || typeof r.id!=='string' || ids.has(r.id) || !whole(r.amount) || !r.amount || r.amount>1000000 || !['cash','robux'].includes(r.type) || !['pending','fulfilled','declined'].includes(r.status) || typeof r.created!=='string' || !Number.isFinite(Date.parse(r.created))) throw Error('Invalid reward request');
+                    if(r.robux !== undefined && (!whole(r.robux) || r.robux>10000000000)) throw Error('Invalid Robux amount');
+                    ids.add(r.id);
+                }
+            }
+        }
+        function validEmail(v) { return v.length<=254 && /^[^\s@,;<>]+@[^\s@,;<>]+\.[^\s@,;<>]+$/.test(v); }
+        function persist() {
+            if (storageFailed) return false;
+            try {
+                if (localStorage.getItem(STORE_KEY) !== storedRaw) throw Error('Progress changed in another window. Reload before continuing.');
+                validateDB(db);
+                const next = JSON.stringify(db); localStorage.setItem(STORE_KEY,next); storedRaw=next;
+                return true;
+            } catch(e) { recordFault('SAVE_ERROR');storageFailed=true; alert('Saving stopped: '+e.message+' Reload this page before playing again. Your last saved progress is preserved.'); document.getElementById('game-screen').classList.add('hidden'); document.getElementById('login-status').innerText='Saving unavailable. Reload before continuing.'; return false; }
+        }
+        function authorizeParent() {
+            if(storageFailed) return false;
+            if(!db.pin) {
+                const pin=prompt('Parent setup: choose a 4–8 digit PIN for this device. Keep it private.');
+                if(!/^\d{4,8}$/.test(pin||'')) return false;
+                if(prompt('Confirm the new PIN:')!==pin) {alert('PINs did not match.');return false;}
+                db.pin=pin; if(!persist()) return false; return true;
+            }
+            const entered=prompt('Enter this device’s Parent PIN:');
+            if(entered===db.pin) return true;
+            if(entered!==null) alert('Incorrect PIN.'); return false;
+        }
+        function renderProfiles() {
+            const picker=document.getElementById('profile-picker'); picker.replaceChildren(new Option('New player…',''));
+            db.profiles.forEach((p,i)=>picker.add(new Option(p.name,String(i))));
+        }
+        function pickProfile(index) {document.getElementById('username-input').value=index===''?'':db.profiles[Number(index)].name;}
+        let currentUser = "";
+        let currentParentEmail = "";
+        let currentOp = "multiplication";
+        let streak = 0;
+        let dollars = 0;
+        let mode="easy", reviewMode=false, currentFact=null, answered=false, currentWasWeak=false;
+        let currentAnswer = 0;
+        let currentTheme = 'classic';
+
+        // --- Theme Engine ---
+        const themesData = {
+            classic: { title: 'Math for Robux! 🚀', subtitle: 'to load your progress', btn: 'Play Now!', rootVars: '', emojis: ['🚀', '⭐'], msgWin: '🎉 10 IN A ROW! You earned $1! 🎉', msgGood: 'Great job! Keep the streak going! 🚀', msgBad: 'Oops! Streak reset to 0. You keep your money though!' },
+            winter: { title: 'Math for Robux! ❄️', subtitle: 'to break the ice...', btn: 'Enter the Blizzard!', rootVars: 'theme-winter', emojis: ['❄️', '⛄'], msgWin: '⛄ 10 IN A ROW! You earned $1! ❄️', msgGood: 'Cool! Keep the streak going! 🧊', msgBad: 'Brrr! Streak frozen at 0. You keep your money!' },
+            spring: { title: 'Math for Robux! 🌷', subtitle: 'to hop in...', btn: 'Spring into Math!', rootVars: 'theme-spring', emojis: ['🌷', '🐰'], msgWin: '🌷 10 IN A ROW! You earned $1! 🐰', msgGood: 'Egg-cellent! Keep hopping! 🐇', msgBad: 'Oh no! Streak reset to 0. You keep your money!' },
+            summer: { title: 'Math for Robux! ☀️', subtitle: 'to catch a wave...', btn: 'Dive In!', rootVars: 'theme-summer', emojis: ['☀️', '🏖️'], msgWin: '🏖️ 10 IN A ROW! You earned $1! ☀️', msgGood: 'Sizzling! Keep the streak hot! 🔥', msgBad: 'Wipeout! Streak reset to 0. You keep your money!' },
+            school: { title: 'Math for Robux! 🎒', subtitle: 'to open your book...', btn: 'Start Class!', rootVars: 'theme-school', emojis: ['🍎', '✏️'], msgWin: 'A+! 10 IN A ROW! You earned $1! 🍎', msgGood: 'Smart! Keep the streak going! ✏️', msgBad: 'Oops! Streak reset to 0. Keep your money!' },
+            spooky: { title: 'Math for Robux! 🎃', subtitle: 'if you dare... 🦇', btn: 'Enter the Graveyard!', rootVars: 'spooky-theme', emojis: ['🦇', '👻'], msgWin: '🎉 10 IN A ROW! You earned $1! 👻🎉', msgGood: 'Wicked! Keep the streak going! 🦇', msgBad: 'Oops! Streak reset to 0. You keep your loot though! 🧟' },
+            thanksgiving: { title: 'Math for Robux! 🦃', subtitle: 'for a feast of math...', btn: 'Gobble It Up!', rootVars: 'theme-thanksgiving', emojis: ['🦃', '🥧'], msgWin: '🥧 10 IN A ROW! You earned $1! 🦃', msgGood: 'Tasty! Keep the streak going! 🌽', msgBad: 'Oh crumbs! Streak reset to 0. Keep your money!' },
+            holiday: { title: 'Math for Robux! 🎄', subtitle: 'to unwrap your math...', btn: 'Open Presents!', rootVars: 'theme-holiday', emojis: ['🎄', '🎁'], msgWin: '🎁 10 IN A ROW! You earned $1! 🎄', msgGood: 'Merry math! Keep the streak going! 🎅', msgBad: 'Oh grinch! Streak reset to 0. You keep your gifts!' }
+        };
+
+        function initTheme() {
+            const rawTheme = localStorage.getItem('robuxMathTheme');
+            const savedTheme = rawTheme === 'auto' || Object.hasOwn(themesData,rawTheme) ? rawTheme : 'auto';
+            document.getElementById('theme-selector').value = savedTheme;
+            applyTheme(savedTheme);
+        }
+
+        function applyTheme(themeId) {
+            let activeTheme = themeId;
+            
+            // Auto detect based on month
+            if (themeId === 'auto') {
+                const m = new Date().getMonth(); // 0-11
+                if (m === 0 || m === 1) activeTheme = 'winter'; // Jan, Feb
+                else if (m === 2 || m === 3) activeTheme = 'spring'; // Mar, Apr
+                else if (m === 4 || m === 5 || m === 6) activeTheme = 'summer'; // May, Jun, Jul
+                else if (m === 7 || m === 8) activeTheme = 'school'; // Aug, Sep
+                else if (m === 9) activeTheme = 'spooky'; // Oct
+                else if (m === 10) activeTheme = 'thanksgiving'; // Nov
+                else if (m === 11) activeTheme = 'holiday'; // Dec
+                else activeTheme = 'classic';
+            }
+
+            currentTheme = activeTheme;
+            try { localStorage.setItem('robuxMathTheme', themeId); } catch(e) {} 
+
+            // Apply CSS class
+            document.body.className = '';
+            if (themesData[activeTheme].rootVars) {
+                document.body.classList.add(themesData[activeTheme].rootVars);
+            }
+            
+            if(currentUser)document.body.classList.add("playing");
+            paintWorld(activeTheme);
+            // Apply Dynamic Text
+            document.getElementById('app-title').innerText = themesData[activeTheme].title;
+            document.getElementById('app-subtitle').innerText = "Enter your name " + themesData[activeTheme].subtitle;
+            document.getElementById('btn-login-text').innerText = themesData[activeTheme].btn;
+        }
+
+        // --- Audio Context ---
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) { audioCtx = new AudioContext(); }
+            if (audioCtx.state === 'suspended') { const resumed=audioCtx.resume(); if(resumed&&resumed.catch)resumed.catch(()=>{}); }
+        }
+
+        function playTone(freq, type, duration, vol=0.1) {
+            if (!audioCtx) return;
+            try {
+            const oscillator = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            oscillator.stop(audioCtx.currentTime + duration);
+            } catch (e) { /* Sound must never interrupt scoring. */ }
+        }
+
+        function soundCorrect() {
+            playTone(600, 'sine', 0.1, 0.1);
+            setTimeout(() => playTone(800, 'sine', 0.2, 0.1), 100);
+        }
+
+        function soundWrong() {
+            playTone(150, 'sawtooth', 0.5, 0.2);
+            setTimeout(() => playTone(100, 'sawtooth', 0.5, 0.2), 150);
+        }
+
+        function soundWin() {
+            playTone(400, 'square', 0.2, 0.1);
+            setTimeout(() => playTone(500, 'square', 0.2, 0.1), 200);
+            setTimeout(() => playTone(600, 'square', 0.4, 0.1), 400);
+        }
+
+        // --- Animations ---
+        function spawnParticles() {
+            const themeEmojis = themesData[currentTheme].emojis;
+            for(let i=0; i<6; i++) {
+                let p = document.createElement('div');
+                p.innerText = Math.random() > 0.5 ? themeEmojis[0] : themeEmojis[1];
+                p.className = 'particle-overlay';
+                p.style.left = (Math.random() * 80 + 10) + '%';
+                p.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                p.style.animationDelay = (Math.random() * 0.5) + 's';
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 4000);
+            }
+        }
+
+        function login() {
+            if(storageFailed) return;
+            const name=document.getElementById('username-input').value.trim();
+            if(!name || name.length>40) {alert('Enter a player name, up to 40 characters.');return;}
+            activeProfile=db.profiles.find(p=>p.name.toLowerCase()===name.toLowerCase());
+            if(!activeProfile) {
+                if(!authorizeParent()) return;
+                const email=(prompt('Parent email for reward drafts (you can add it later):')||'').trim();
+                if(email && !validEmail(email)) {alert('Enter a valid email address.');return;}
+                activeProfile={name,email,streak:0,dollars:0,requests:[]}; upgradeProfile(activeProfile); db.profiles.push(activeProfile);
+                if(!persist()) return;
+            }
+            currentUser=activeProfile.name; currentParentEmail=activeProfile.email;
+            streak=activeProfile.streak; dollars=activeProfile.dollars;
+            currentOp=document.getElementById('math-operation').value;mode=document.getElementById('answer-mode').value;reviewMode=document.getElementById('practice-mode').value==='review';
+            document.getElementById('display-username').innerText=currentUser;
+            document.getElementById('parent-target-user').innerText=currentUser;
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('game-screen').classList.remove('hidden');document.body.classList.add('playing');
+            document.getElementById('sync-status').innerText='Saved on this device • No cloud sync';
+            document.getElementById('message').innerText='';
+            updateStats(false); generateRandomQuestion(); try {initAudio();} catch(e) {}
+        }
+        function logout() {
+            closeModals();document.body.classList.remove('playing'); currentUser='';activeProfile=null;currentParentEmail='';streak=0;dollars=0;
+            document.getElementById('game-screen').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+            document.getElementById('username-input').value='';renderProfiles();
+        }
+        function saveData() {
+            if(!activeProfile || storageFailed) return false;
+            activeProfile.streak=streak;activeProfile.dollars=dollars;
+            const ok=persist(); document.getElementById('sync-status').innerText=ok?'✓ Saved on this device':'Saving failed — reload';return ok;
+        }
+        function updateStats(shouldSave = true) {
+            document.getElementById('streak-text').innerText = streak;
+            document.getElementById('dollars-text').innerText = dollars;
+            document.getElementById('robux-text').innerText = affordablePack(dollars);
+            
+            const cashoutBtn = document.getElementById('cashout-btn');
+            cashoutBtn.disabled = dollars < activeProfile.rules.minimum;
+            
+            document.getElementById('streak-goal').innerText=activeProfile.rules.goal;
+            renderLearning();
+            const percentage = (streak / activeProfile.rules.goal) * 100;
+            document.getElementById('streak-bar').style.width = percentage + '%';
+            
+            if (shouldSave) saveData();
+        }
+
+        function generateRandomQuestion() {
+            if(!activeProfile || storageFailed) return;
+            const previous=currentFact?.key;
+            const weak=Object.values(activeProfile.facts).filter(f=>f.op===currentOp && f.weak>0);
+            let f=null;
+            if(reviewMode && weak.length) {
+                const pool=weak.length>1?weak.filter(f=>f.key!==previous):weak;
+                f=pool.sort((a,b)=>b.weak-a.weak || (a.last||0)-(b.last||0))[0];
+            }
+            if(!f) {
+                let a,b;
+                if(currentOp==='multiplication') {a=rand(12);b=rand(12);}
+                else if(currentOp==='division') {b=rand(12);a=b*rand(12);}
+                else if(currentOp==='addition') {a=rand(50);b=rand(50);}
+                else {b=rand(50);a=b+rand(50);}
+                f={key:currentOp+':'+a+':'+b,op:currentOp,a,b};
+            }
+            currentFact={key:f.key,op:f.op,a:f.a,b:f.b};
+            currentAnswer=solve(currentFact);currentWasWeak=(activeProfile.facts[f.key]?.weak||0)>0;answered=false;
+            document.getElementById('question-text').textContent=factLabel(currentFact)+' = ?';
+            const choices=new Set([currentAnswer]);while(choices.size<4) {const n=currentAnswer+(Math.random()<.5?-1:1)*rand(12);if(n>=0)choices.add(n);}
+            const shuffled=[...choices];for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]];}
+            renderOptions(shuffled);
+            document.getElementById('options-container').classList[mode==='hard'?'add':'remove']('hidden');
+            document.getElementById('typed-form').classList[mode==='hard'?'remove':'add']('hidden');
+            const input=document.getElementById('typed-answer');input.value='';input.disabled=false;document.getElementById('typed-submit').disabled=false;document.getElementById('typed-hint').innerText='';
+            if(mode==='hard') input.focus();renderLearning();
+        }
+        function rand(n){return Math.floor(Math.random()*n)+1;}
+        function solve(f){return f.op==='addition'?f.a+f.b:f.op==='subtraction'?f.a-f.b:f.op==='multiplication'?f.a*f.b:f.a/f.b;}
+        function factLabel(f){return f.a+' '+({addition:'+',subtraction:'−',multiplication:'×',division:'÷'}[f.op])+' '+f.b;}
+        function submitTypedAnswer(){
+            if(answered||storageFailed) return;
+            const value=document.getElementById('typed-answer').value.trim().replace(/[٠-٩]/g,c=>String(c.charCodeAt(0)-1632)).replace(/[۰-۹]/g,c=>String(c.charCodeAt(0)-1776));
+            if(!/^\d+$/.test(value)||!Number.isSafeInteger(Number(value))) {document.getElementById('typed-hint').innerText='Enter a whole number first.';return;}
+            checkAnswer(document.getElementById('typed-submit'),Number(value));
+        }
+        function renderOptions(choices) {
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            document.getElementById('main-container').classList.remove('shake');
+            
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = choice;
+                btn.onclick = () => checkAnswer(btn, choice);
+                optionsContainer.appendChild(btn);
+            });
+            
+            document.getElementById('next-btn').classList.add('hidden');
+            
+            const messageEl = document.getElementById('message');
+            if (!messageEl.innerText.includes('10 IN A ROW')) {
+                messageEl.innerText = '';
+            }
+        }
+
+        function checkAnswer(btn, selected) {
+            if(storageFailed || !activeProfile || answered || btn.disabled) return;
+            answered=true;const correct=selected===currentAnswer;
+            document.querySelectorAll('.option-btn').forEach(b=>{b.disabled=true;if(Number(b.innerText)===currentAnswer)b.classList.add('correct');});
+            document.getElementById('typed-answer').disabled=true;document.getElementById('typed-submit').disabled=true;
+            const message=document.getElementById('message');const day=todayData();
+            const stat=activeProfile.stats[currentOp];stat.attempts++;if(correct)stat.correct++;
+            const m=activeProfile.modes[mode];m.attempts++;if(correct)m.correct++;
+            day.attempts++;day.ops[currentOp]=true;if(correct)day.correct++;
+            let f=activeProfile.facts[currentFact.key];
+            if(!f) f=activeProfile.facts[currentFact.key]={...currentFact,attempts:0,correct:0,weak:0,last:0};
+            f.attempts++;f.last=Date.now();if(correct){f.correct++;if(currentWasWeak){f.weak=Math.max(0,f.weak-1);day.reviews++;}}else f.weak=3;
+            if(correct) {
+                streak++;day.best=Math.max(day.best,streak);activeProfile.best=Math.max(activeProfile.best,streak);
+                if(streak>=activeProfile.rules.goal) {
+                    const award=Math.max(0,Math.min(activeProfile.rules.award,activeProfile.rules.cap-day.earned,1000000-dollars));
+                    dollars+=award;day.earned+=award;streak=0;day.completed++;activeProfile.completed++;day.season=currentTheme;
+                    message.innerText='🎉 '+activeProfile.rules.goal+' IN A ROW! '+(award?'You earned $'+award+'!':'Streak completed! Reward limit reached; keep practicing.');soundWin();spawnParticles();
+                } else {message.innerText=themesData[currentTheme].msgGood;soundCorrect();}
+                message.style.color='var(--msg-win)';
+            } else {
+                streak=0;message.innerText=themesData[currentTheme].msgBad+' '+factLabel(currentFact)+' = '+currentAnswer+'. Added to weak-skill review.';message.style.color='var(--msg-bad)';btn.classList.add('incorrect');soundWrong();
+            }
+            day.hardCorrect=(day.hardCorrect||0)+(correct&&mode==='hard'?1:0);day.correctByOp[currentOp]=(day.correctByOp[currentOp]||0)+(correct?1:0);
+            const newBadges=awardBadges();
+            updateStats(true);document.getElementById('badge-notice').innerText=newBadges.length?'🏅 Badge unlocked: '+newBadges.join(' • '):'';document.getElementById('next-btn').classList.remove('hidden');
+        }
+        function loadNextQuestion() {
+            document.getElementById('message').innerText = '';
+            generateRandomQuestion();
+        }
+
+        function closeModals() {
+            ['cashout-modal','parent-modal','requests-modal','dashboard-modal','badges-modal','tasks-modal','game-menu-modal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+            parentAuthorized=false;
+        }
+        function openCashOutModal() {
+            if(storageFailed || dollars<activeProfile.rules.minimum) return;
+            const type=document.getElementById('reward-type');type.replaceChildren();if(activeProfile.rules.types!=='robux')type.add(new Option('Cash','cash'));if(activeProfile.rules.types!=='cash')type.add(new Option('Robux','robux'));
+            document.getElementById('cashout-rule').innerText='Minimum request: $'+activeProfile.rules.minimum+'. Fixed package prices rounded to whole dollars; tax excluded.';
+            document.getElementById('modal-available').innerText=dollars;
+            document.getElementById('cashout-amount').value='';
+            refreshCashoutFields();document.getElementById('cashout-modal').classList.remove('hidden');
+        }
+        function processCashOut() {
+            if(storageFailed || !activeProfile || document.getElementById('cashout-modal').classList.contains('hidden')) return;
+            const chosenType=document.getElementById('reward-type').value;
+            const pack=ROBUX_PACKAGES.find(p=>String(p.robux)===document.getElementById('robux-package').value);
+            const amount=chosenType==='robux'?(pack?.cost||0):Number(document.getElementById('cashout-amount').value);
+            if(!Number.isSafeInteger(amount)||amount<activeProfile.rules.minimum||amount>dollars) {alert('Choose a whole dollar amount at or above the minimum and within your available balance.');return;}
+            if(!validEmail(activeProfile.email)) {alert('A parent must add their email in Parent Controls first.');return;}
+            const type=document.getElementById('reward-type').value;
+            if(!['cash','robux'].includes(type)||(activeProfile.rules.types!=='both'&&type!==activeProfile.rules.types)) return;
+            const r={robux:type==='robux'?pack.robux:0,id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,10),amount,type:document.getElementById('reward-type').value,status:'pending',created:new Date().toISOString()};
+            dollars-=amount;activeProfile.requests.push(r);
+            if(!saveData()) return;
+            updateStats(false);closeModals();
+            document.getElementById('message').innerText='Request saved as pending. Send the draft in your email app. Reopen it from Reward requests if needed.';
+            openEmail(r.id);
+        }
+        function openEmail(id) {
+            const r=activeProfile.requests.find(x=>x.id===id);if(!r||r.status!=='pending') return;
+            if(!validEmail(activeProfile.email)) {alert('Add a parent email first.');return;}
+            const reward=r.type==='cash'?'$'+r.amount+' cash':(r.robux??r.amount*80)+' Robux';
+            const body=currentUser+' requests '+reward+'.\nGame credit reserved: $'+r.amount+'.\nRequest ID: '+r.id+'\nCreated: '+r.created+'\n\nPlease review this request in Parent Controls on the child’s device. Mark fulfilled after supplying the reward, or decline to return the reserved credit. This email does not transfer cash or Robux.';
+            location.href='mailto:'+encodeURIComponent(activeProfile.email)+'?subject='+encodeURIComponent('Math reward request: '+currentUser+' — '+reward)+'&body='+encodeURIComponent(body);
+        }
+        function showRequests(manage) {
+            if(!activeProfile) return;
+            const canManage=manage && parentAuthorized;
+            const list=document.getElementById('requests-list');list.replaceChildren();
+            if(!activeProfile.requests.length) list.textContent='No reward requests yet.';
+            [...activeProfile.requests].reverse().forEach(r=>{
+                const card=document.createElement('div');card.className='request-card';
+                const label=document.createElement('p');label.textContent=(r.type==='cash'?'$'+r.amount+' cash':(r.robux??r.amount*80)+' Robux')+' • '+r.status+' • '+new Date(r.created).toLocaleString();card.append(label);
+                if(r.status==='pending') {
+                    const email=document.createElement('button');email.textContent='Open email draft';email.onclick=()=>openEmail(r.id);card.append(email);
+                    if(canManage) for(const [status,title] of [['fulfilled','Mark fulfilled'],['declined','Decline & return credit']]) {
+                        const button=document.createElement('button');button.textContent=title;button.onclick=()=>resolveRequest(r.id,status);card.append(button);
+                    }
+                }
+                list.append(card);
+            });
+            document.getElementById('parent-modal').classList.add('hidden');document.getElementById('requests-modal').classList.remove('hidden');
+        }
+        function resolveRequest(id,status) {
+            if(!parentAuthorized||storageFailed) return;
+            const r=activeProfile.requests.find(x=>x.id===id);
+            if(!r||r.status!=='pending'||!['fulfilled','declined'].includes(status)) return;
+            if(!confirm(status==='fulfilled'?'Have you provided this reward?':'Decline this request and return the reserved credit?')) return;
+            if(status==='declined') dollars+=r.amount;r.status=status;
+            if(saveData()) {updateStats(false);showRequests(true);}
+        }
+        function openParentPanel() {
+            if(!authorizeParent()) return;parentAuthorized=true;
+            document.getElementById('parent-email-setting').value=activeProfile.email;
+            fillRewardRules();
+            document.getElementById('parent-modal').classList.remove('hidden');
+        }
+        function saveParentEmail() {
+            if(!parentAuthorized) return;
+            const value=document.getElementById('parent-email-setting').value.trim();
+            if(!validEmail(value)) {alert('Enter a valid parent email.');return;}
+            activeProfile.email=value;currentParentEmail=value;if(saveData()) alert('Parent email saved.');
+        }
+        function parentAddMoney() {
+            if(!parentAuthorized) return;
+            const value=Number(document.getElementById('parent-add-amount').value);
+            if(!Number.isSafeInteger(value)||value<=0||value+dollars>1000000) {alert('Enter a positive whole dollar amount (total limit $1,000,000).');return;}
+            dollars+=value;if(saveData()) {updateStats(false);document.getElementById('parent-add-amount').value='';closeModals();}
+        }
+        function parentResetAll() {
+            if(!parentAuthorized) return;
+            if(activeProfile.requests.some(r=>r.status==='pending')) {alert('Resolve pending requests before resetting progress.');return;}
+            if(!confirm('Reset '+currentUser+'’s balance and streak? Reward history will remain.')) return;
+            dollars=0;streak=0;if(saveData()) {updateStats(false);closeModals();}
+        }
+        function exportBackup() {
+            if(!authorizeParent()) return;
+            if(window.AndroidGame){AndroidGame.exportBackup(JSON.stringify(db,null,2));return;}
+            const url=URL.createObjectURL(new Blob([JSON.stringify(db,null,2)],{type:'application/json'}));
+            const a=document.createElement('a');a.href=url;a.download='math-rewards-backup-'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+            alert('Keep this backup private: it includes player emails and the local Parent PIN.');
+        }
+        async function importBackup(input) {
+            const file=input.files[0];input.value='';if(!file) return;
+            if(!authorizeParent()) return;
+            try {
+                if(file.size>5000000) throw Error('Backup too large');
+                const incoming=JSON.parse(await file.text());migrateDB(incoming);validateDB(incoming);
+                if(!confirm('Replace ALL profiles on this device with this backup? Export your current backup first. The backup’s Parent PIN will apply.')) return;
+                db=incoming;if(persist()) {logout();alert('Backup restored.');}
+            } catch(e) {recordFault('IMPORT_ERROR');alert('Cannot restore backup: '+e.message);}
+        }
+        // Handle Enter keys for login
+        document.getElementById("username-input").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") { event.preventDefault(); login(); }
+        });
+        // Learning history begins with this edition; earlier balances and streaks are preserved.
+        const operations=['multiplication','division','addition','subtraction'];
+        function defaultRules(){return {goal:10,award:1,cap:10,minimum:1,types:'both'};}
+        function emptyStats(){return Object.fromEntries(operations.map(op=>[op,{attempts:0,correct:0}]));}
+        function upgradeProfile(p){
+            p.rules=defaultRules();p.stats=emptyStats();p.modes={easy:{attempts:0,correct:0},hard:{attempts:0,correct:0}};p.facts={};p.days={};p.best=p.streak;p.completed=0;
+            p.requests.forEach(r=>{r.robux=r.amount*80;});p.badges={};
+        }
+        function migrateDB(v){
+            if(v && v.version===10 && Array.isArray(v.profiles)){v.profiles.forEach(upgradeProfile);v.version=11;}
+            if(v && v.version===11 && Array.isArray(v.profiles)){
+                v.profiles.forEach(p=>{delete p.rules.rate;p.badges={};Object.values(p.days).forEach(d=>{d.taskVersion=1;d.hardCorrect=0;d.correctByOp={};});});v.version=12;
+            }
+        }
+        function validateLearning(p){
+            const integer=(v,min,max)=>Number.isSafeInteger(v)&&v>=min&&v<=max;
+            const r=p.rules;
+            if(!r||!integer(r.goal,2,100)||!integer(r.award,1,100)||!integer(r.cap,0,1000)||!integer(r.minimum,1,1000)||Object.hasOwn(r,'rate')||!['cash','robux','both'].includes(r.types))throw Error('Invalid reward rules');
+            const counter=x=>x&&integer(x.attempts,0,Number.MAX_SAFE_INTEGER)&&integer(x.correct,0,x.attempts);
+            if(!p.stats||!p.modes||!operations.every(op=>counter(p.stats[op]))||!['easy','hard'].every(m=>counter(p.modes[m]))||!integer(p.best,0,100)||!integer(p.completed,0,Number.MAX_SAFE_INTEGER)||!p.badges||Array.isArray(p.badges)||!p.facts||Array.isArray(p.facts)||!p.days||Array.isArray(p.days))throw Error('Invalid progress history');
+            for(const [key,b] of Object.entries(p.badges))if(typeof b!=='string'||!Number.isFinite(Date.parse(b))||key.length>100)throw Error('Invalid badge');
+            for(const [key,f] of Object.entries(p.facts))if(!counter(f)||!operations.includes(f.op)||!integer(f.a,1,144)||!integer(f.b,1,50)||key!==f.op+':'+f.a+':'+f.b||f.key!==key||!integer(solve(f),0,10000)||!integer(f.weak,0,3)||!integer(f.last,0,Number.MAX_SAFE_INTEGER))throw Error('Invalid review fact');
+            for(const [date,d] of Object.entries(p.days))if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!counter(d)||!integer(d.earned,0,1000)||!integer(d.best,0,100)||!integer(d.completed,0,Number.MAX_SAFE_INTEGER)||!integer(d.reviews,0,d.correct)||![1,2].includes(d.taskVersion)||!integer(d.hardCorrect,0,d.correct)||!d.correctByOp||!Object.entries(d.correctByOp).every(([op,n])=>operations.includes(op)&&integer(n,0,d.correct))||(d.taskVersion===2&&!['hard',...operations].includes(d.quest))||!d.ops||!Object.keys(d.ops).every(op=>operations.includes(op)))throw Error('Invalid daily progress');
+        }
+        function dayKey(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+        function todayData(){const key=dayKey();return activeProfile.days[key]||(activeProfile.days[key]={attempts:0,correct:0,earned:0,best:0,completed:0,reviews:0,ops:{},taskVersion:2,quest:['hard',...operations][Number(key.replaceAll('-',''))%5],hardCorrect:0,correctByOp:{}});}
+        function missions(d){
+            const tasks=[{id:'practice',name:'Practice 10 questions',value:d.attempts,target:10,icon:'🎯'},{id:'accuracy',name:'Get 8 answers correct',value:d.correct,target:8,icon:'⭐'},{id:'explorer',name:'Practice 2 math operations',value:Object.keys(d.ops).length,target:2,icon:'🧭'}];
+            if(d.taskVersion===2){const quest=d.quest;tasks.push(quest==='hard'?{id:'challenge',name:'Get 5 correct in Hard mode',value:d.hardCorrect,target:5,icon:'⌨️'}:{id:'challenge',name:'Get 5 correct in '+quest,value:d.correctByOp[quest]||0,target:5,icon:'⚡'});}
+            return tasks;
+        }
+        function renderLearning(){
+            const p=activeProfile,r=p.rules,d=todayData();
+            document.getElementById('session-label').innerText=(mode==='hard'?'Hard • Type your answer':'Easy • Multiple choice')+' • '+currentOp+(reviewMode?' • Weak-skill review':'');
+            document.getElementById('reward-rule-summary').innerText=r.goal+' in a row earns $'+r.award+' • Today: $'+d.earned+' / $'+r.cap+' limit';
+            document.getElementById('review-toggle').innerText=reviewMode?'Back to regular practice':'Review weak skills';
+            const box=document.getElementById('daily-missions');box.replaceChildren();
+            const title=document.createElement('strong');title.textContent='Today’s quest board • '+dayKey();box.append(title);
+            for(const m of missions(d)){const card=document.createElement('div');card.className='task-card'+(m.value>=m.target?' completed':'');const line=document.createElement('p');line.textContent=(m.value>=m.target?'✅ ':m.icon+' ')+m.name+' — '+Math.min(m.value,m.target)+'/'+m.target;const bar=document.createElement('progress');bar.max=m.target;bar.value=Math.min(m.value,m.target);bar.setAttribute('aria-label',m.name);card.append(line,bar);box.append(card);}const note=document.createElement('small');note.textContent='Tasks reset at local midnight. Badges stay in your collection. Cash still comes from streaks.';box.append(note);
+            if(reviewMode){const line=document.createElement('p');const n=Object.values(p.facts).filter(f=>f.op===currentOp&&f.weak>0).length;line.textContent=n?n+' facts to review. Three correct review answers clear a missed fact.':'No weak facts for this operation. Practicing new questions.';box.append(line);}
+        }
+        function toggleReview(){reviewMode=!reviewMode;renderLearning();if(answered)loadNextQuestion();else document.getElementById('message').innerText='Practice changed. Finish this question; the next question uses your selection.';}
+        function fillRewardRules(){const r=activeProfile.rules;for(const [id,key] of [['goal','goal'],['award','award'],['cap','cap'],['min','minimum'],['types','types']])document.getElementById('rule-'+id).value=r[key];}
+        function saveRewardRules(){
+            if(!parentAuthorized||storageFailed)return;
+            const old=activeProfile.rules;const r={};for(const [id,key] of [['goal','goal'],['award','award'],['cap','cap'],['min','minimum']])r[key]=Number(document.getElementById('rule-'+id).value);r.types=document.getElementById('rule-types').value;
+            activeProfile.rules=r;try{validateLearning(activeProfile);}catch(e){activeProfile.rules=old;alert('Use whole numbers within the displayed ranges.');return;}
+            if(r.goal!==old.goal&&streak>0&&!confirm('Changing the streak target resets the current streak. Keep these rules?')){activeProfile.rules=old;return;}
+            if(r.goal!==old.goal)streak=0;
+            if(saveData()){updateStats(false);alert('Reward rules saved. Robux package prices stay locked. Existing requests keep their original amounts.');}
+        }
+        function showDashboard(){
+            if(!activeProfile)return;
+            const p=activeProfile,d=todayData(),body=document.getElementById('dashboard-body');body.replaceChildren();document.getElementById('dashboard-name').innerText=p.name+' • Learning history since the v11 update';
+            const line=text=>{const el=document.createElement('p');el.textContent=text;body.append(el);};
+            const all=Object.values(p.stats).reduce((t,x)=>({attempts:t.attempts+x.attempts,correct:t.correct+x.correct}),{attempts:0,correct:0});
+            const accuracy=x=>x.attempts?Math.round(x.correct/x.attempts*100)+'%':'—';
+            line(all.attempts+' questions • '+accuracy(all)+' accuracy • Best streak: '+p.best+' • Completed streaks: '+p.completed);
+            const totals={pending:0,fulfilled:0,declined:0};p.requests.forEach(r=>totals[r.status]+=r.amount);line('Available: $'+dollars+' • Pending: $'+totals.pending+' • Fulfilled: $'+totals.fulfilled);
+            const table=document.createElement('table');const row=values=>{const tr=document.createElement('tr');values.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.append(td);});table.append(tr);};
+            row(['Skill / mode','Questions','Accuracy']);for(const [name,x] of [...Object.entries(p.stats),...Object.entries(p.modes)])row([name,x.attempts,accuracy(x)]);body.append(table);
+            line('Today: '+d.attempts+' questions • '+d.reviews+' correct weak-fact reviews • $'+d.earned+' earned');
+            const completedDays=Object.values(p.days).filter(day=>missions(day).every(m=>m.value>=m.target)).length;line('All-missions-complete badges: '+completedDays);
+            const weak=Object.values(p.facts).filter(f=>f.weak>0).sort((a,b)=>b.weak-a.weak);line('Weak facts to review: '+weak.length);
+            for(const f of weak.slice(0,12))line(factLabel(f)+' — '+f.correct+'/'+f.attempts+' correct; '+f.weak+' correct reviews remaining');
+            if(weak.length>12)line('Plus '+(weak.length-12)+' more. Use Review weak skills to practice.');
+            line('To practice a different operation or answer mode, use Switch User and select this same player. Progress stays saved.');
+            document.getElementById('dashboard-modal').classList.remove('hidden');
+        }
+
+        function refreshCashoutFields(){
+            const robux=document.getElementById('reward-type').value==='robux';
+            for(const id of ['cashout-amount','cash-amount-label'])document.getElementById(id).classList[robux?'add':'remove']('hidden');
+            for(const id of ['robux-package','pack-label'])document.getElementById(id).classList[robux?'remove':'add']('hidden');
+            const select=document.getElementById('robux-package');select.replaceChildren();
+            ROBUX_PACKAGES.forEach(p=>{const option=new Option(p.robux.toLocaleString()+' Robux — $'+p.cost+(p.cost>dollars?' • need $'+(p.cost-dollars)+' more':p.cost<activeProfile.rules.minimum?' • below minimum':''),String(p.robux));option.disabled=p.cost>dollars||p.cost<activeProfile.rules.minimum;select.add(option);});
+            const available=ROBUX_PACKAGES.find(p=>p.cost<=dollars&&p.cost>=activeProfile.rules.minimum);select.value=available?String(available.robux):'';
+        }
+        const badgeCatalog=[
+            ['first','🌟','First Steps','Answer your first question',p=>totalsFor(p).attempts>=1],
+            ['fifty','📚','Math Explorer','Answer 50 questions',p=>totalsFor(p).attempts>=50],
+            ['hundred','💯','Century Club','Answer 100 questions',p=>totalsFor(p).attempts>=100],
+            ['streak','🔥','Streak Keeper','Complete a reward streak',p=>p.completed>=1],
+            ['ten','⚡','Perfect Ten','Reach 10 correct in a row',p=>p.best>=10],
+            ['hard','⌨️','Keyboard Hero','Get 10 Hard-mode answers correct',p=>p.modes.hard.correct>=10],
+            ['review','🛠️','Comeback Kid','Correct 5 previously missed facts (review answers)',p=>Object.values(p.days).reduce((n,d)=>n+d.reviews,0)>=5],
+            ['week','🗓️','Seven-Day Explorer','Practice on 7 different days',p=>Object.values(p.days).filter(d=>d.attempts>0).length>=7]
+        ];
+        function totalsFor(p){return Object.values(p.stats).reduce((t,x)=>({attempts:t.attempts+x.attempts,correct:t.correct+x.correct}),{attempts:0,correct:0});}
+        function awardBadges(){
+            const p=activeProfile,newNames=[];const earn=(id,name)=>{if(!Object.hasOwn(p.badges,id)){p.badges[id]=new Date().toISOString();newNames.push(name);}};
+            badgeCatalog.forEach(([id,icon,name,desc,eligible])=>{if(eligible(p))earn(id,name);});
+            for(const [date,d] of Object.entries(p.days)){
+                for(const m of missions(d))if(m.value>=m.target)earn('daily:'+date+':'+m.id,m.name);
+                if(missions(d).every(m=>m.value>=m.target))earn('daily:'+date+':all','Daily Champion');
+                if(d.season&&worlds[d.season])earn('season:'+d.season,worlds[d.season][0]+' Explorer');
+            }
+            return newNames;
+        }
+        function showBadges(){
+            if(!activeProfile)return;
+            const p=activeProfile,grid=document.getElementById('badge-grid');grid.replaceChildren();
+            document.getElementById('badge-count').innerText=Object.keys(p.badges).length+' badges collected • Saved for '+p.name;
+            const card=(id,icon,name,desc)=>{const el=document.createElement('article');const earned=Object.hasOwn(p.badges,id);el.className='badge-card'+(earned?' earned':' locked');const emblem=document.createElement('div');emblem.className='badge-emblem';emblem.textContent=earned?icon:'🔒';const title=document.createElement('strong');title.textContent=name;const detail=document.createElement('p');detail.textContent=desc;const state=document.createElement('small');state.textContent=earned?'Earned '+new Date(p.badges[id]).toLocaleDateString():'Not earned yet';el.append(emblem,title,detail,state);grid.append(el);};
+            badgeCatalog.forEach(([id,icon,name,desc])=>card(id,icon,name,desc));
+            Object.entries(worlds).forEach(([id,w])=>card('season:'+id,w[1],w[0]+' Explorer','Complete a reward streak in this theme'));
+            Object.keys(p.badges).filter(id=>id.startsWith('daily:')).sort().reverse().forEach(id=>{const [,date,task]=id.split(':');card(id,task==='all'?'🏆':'🏅',task==='all'?'Daily Champion':({practice:'Practice Star',accuracy:'Sharp Thinker',explorer:'Skill Explorer',challenge:'Challenge Finisher'}[task]||'Daily Task'),date);});
+            document.getElementById('badges-modal').classList.remove('hidden');
+        }
+        const worlds={
+            classic:['Galaxy Station','🚀','Launch your next great idea.','#090f29','#172443','#64d9ff','#bacaff','✦','🪐'],
+            winter:['Aurora Summit','🏔️','Climb higher, one answer at a time.','#071c30','#11384b','#71eadb','#b2dfff','❄','⛄'],
+            spring:['Enchanted Garden','🌸','Grow your streak. Watch your skills bloom.','#132c29','#254d42','#ffd2e9','#aef5b2','✿','🦋'],
+            summer:['Sunset Island','🏝️','Catch a wave of brilliant answers.','#152442','#303657','#ffcb78','#8ce4ef','☀','🐚'],
+            school:['Inventor Academy','🎒','Big ideas start with small discoveries.','#17283a','#293f53','#ffd77d','#9ad6ff','✎','📐'],
+            spooky:['Moonlit Manor','🎃','A little spooky. A lot of brainpower.','#180c2a','#2d1645','#ffac59','#d1a6ff','✧','🦇'],
+            thanksgiving:['Harvest Hollow','🍁','Gather bright ideas and golden streaks.','#2b1920','#49302b','#ffcb80','#f2b891','🍂','🦉'],
+            holiday:['Starlight Village','🎄','Unwrap a little math magic.','#082c2d','#184641','#a7f6cc','#ffd6ad','❄','🎁']
+        };
+        function paintWorld(id){
+            const [name,icon,caption,bg,panel,accent,secondary,speck,friend]=worlds[id];
+            const props={'bg':bg,'container':panel,'text':'#f5f6fb','heading':accent,'input-bg':bg,'input-border':'2px solid '+secondary,'input-text':'#ffffff','btn-bg':accent,'btn-text':'#152332','btn-hover':secondary,'panel-bg':bg,'panel-border':'1px solid '+secondary,'stat-text':'#edf2ff','money':'#a9f5c9','robux':accent,'progress-bg':bg,'progress-fill':accent,'q-color':secondary,'opt-bg':bg,'opt-text':'#ffffff','opt-border':'2px solid '+secondary,'opt-hover':accent,'opt-hover-text':'#152332','modal-bg':panel,'modal-text':'#f5f6fb','small-btn':bg,'small-btn-hover':panel,'next-btn':accent,'next-hover':secondary,'sync-color':'#a9f5c9','msg-win':'#a9f5c9','msg-good':secondary,'msg-bad':'#ffb1b5','cashout-bg':accent,'cashout-text':'#152332','cashout-hover':secondary,'cashout-dis':'#526071','msg-cash':accent};
+            Object.entries(props).forEach(([key,value])=>document.body.style.setProperty('--'+key,value));
+            document.body.dataset.world=id;document.getElementById('world-title').innerText=name;document.getElementById('world-icon').innerText=icon;document.getElementById('world-caption').innerText=caption;
+            const scene=document.getElementById('theme-scene');scene.replaceChildren();
+            for(let i=0;i<12;i++){const item=document.createElement('span');item.textContent=i%4===0?friend:speck;item.style.left=(i*37%100)+'%';item.style.top=(i*23%100)+'%';item.style.animationDelay=-(i*1.7)+'s';item.style.fontSize=(18+i%3*12)+'px';scene.append(item);}
+        }
+        function showTasks(){renderLearning();document.getElementById('tasks-modal').classList.remove('hidden');}
+        function openGameMenu(){document.getElementById('game-menu-modal').classList.remove('hidden');}
+        document.getElementById('typed-submit').addEventListener('click',submitTypedAnswer);
+        document.getElementById('typed-form').addEventListener('submit',event=>{event.preventDefault();submitTypedAnswer();});
+        document.getElementById('typed-answer').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();submitTypedAnswer();}});
+        window.onload = () => {
+            if(window.AndroidGame && typeof AndroidGame.versionName==='function')document.getElementById('native-version').textContent=AndroidGame.versionName();
+            try {readDB();const probe=STORE_KEY+'-probe';localStorage.setItem(probe,'1');localStorage.removeItem(probe);initTheme();renderProfiles();}
+            catch(e) {recordFault('LOAD_ERROR');storageFailed=true;document.getElementById('login-status').innerText='Local saving is unavailable or data is damaged. Use a regular browser with storage enabled. Existing data has not been overwritten.';document.getElementById('btn-login-text').disabled=true;}
+        };
+    </script>
+</body>
+</html>

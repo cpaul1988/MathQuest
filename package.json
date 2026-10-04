@@ -1,0 +1,1 @@
+{"name":"math-quest-android","private":true,"version":"1.0.0","scripts":{"test":"node scripts/test-game.cjs"},"devDependencies":{"jsdom":"30.1.2"}}
