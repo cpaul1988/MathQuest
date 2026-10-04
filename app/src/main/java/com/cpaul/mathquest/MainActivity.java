@@ -63,6 +63,7 @@ public class MainActivity extends Activity {
         @JavascriptInterface public void speakQuestion(String text){if(text!=null&&text.length()<200&&text.matches("[0-9a-zA-Z ×÷+−? .-]+"))runOnUiThread(()->readQuestionAloud(text));}
         @JavascriptInterface public boolean accountSignedIn(){return parentAccount!=null&&parentAccount.isSignedIn();}
         @JavascriptInterface public void parentAccountAction(String payload,String metadata,String action){if(payload==null||metadata==null||payload.length()>650000||metadata.length()>2000||action==null||!java.util.Arrays.asList("menu","signin","signup","google").contains(action))return;runOnUiThread(()->{if(parentAccount!=null)parentAccount.open(payload,metadata,action);else showMessage("Account unavailable","Keep playing offline and try again later.");});}
+        @JavascriptInterface public void answerHaptic(){runOnUiThread(()->{if(web!=null)web.performHapticFeedback(android.view.HapticFeedbackConstants.KEYBOARD_TAP);});}
         @JavascriptInterface public boolean accountBusy(){return parentAccount!=null&&parentAccount.isBusy();}
         @JavascriptInterface public void signOutAccount(){runOnUiThread(()->{if(parentAccount!=null)parentAccount.signOutFromDevice();});}
         @JavascriptInterface public void parentAccount(String payload,String metadata){if(payload==null||metadata==null||payload.length()>650000||metadata.length()>2000)return;runOnUiThread(()->{if(parentAccount!=null)parentAccount.open(payload,metadata);else showMessage("Account unavailable","You can keep playing locally. Reopen the app and try again.");});}
@@ -92,6 +93,6 @@ public class MainActivity extends Activity {
     // Legacy API 26–32 path. API 33+ uses the OnBackInvokedDispatcher registered in onCreate.
     @android.annotation.SuppressLint("GestureBackNavigation")
     @Override public void onBackPressed(){handleBack();}
-    private void handleBack(){web.evaluateJavascript("(function(){const opened=[...document.querySelectorAll(\".modal-overlay\")].some(x=>!x.classList.contains(\"hidden\"));if(opened)closeModals();return opened;})()",value->{if("false".equals(value))finish();});}
+    private void handleBack(){web.evaluateJavascript("typeof appBack==='function'?appBack():false",value->{if("false".equals(value))finish();});}
     @Override protected void onDestroy(){if(speech!=null){speech.stop();speech.shutdown();}if(parentAccount!=null)parentAccount.close();if(fileCallback!=null)fileCallback.onReceiveValue(null);if(web!=null){web.removeJavascriptInterface("AndroidGame");web.destroy();}io.shutdown();super.onDestroy();}
 }
