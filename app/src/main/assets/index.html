@@ -197,7 +197,7 @@
             <button class="small-btn" onclick="exportBackup()">Export backup</button>
             <button class="small-btn" onclick="document.getElementById('backup-input').click()">Restore backup</button>
             <input id="backup-input" type="file" accept="application/json,.json" hidden onchange="importBackup(this)">
-            <p style="font-size:.85em">Parent: set up this device’s PIN before children play. This is a household control, not a secure online account.</p>
+            <button class="small-btn" onclick="showPrivacy()">Privacy &amp; family rewards</button><p style="font-size:.85em">Parent: set up this device’s PIN before children play. This is a household control, not a secure online account.</p>
             
             <select id="math-operation" class="op-select">
                 <option value="multiplication">✖️ Multiplication (x)</option>
@@ -229,7 +229,7 @@
                         <span class="robux-text">Largest affordable pack: <span id="robux-text">0</span> Robux</span>
                     </div>
                 </div>
-                <button id="cashout-btn" onclick="openCashOutModal()" disabled>Cash Out 💵</button>
+                <button id="cashout-btn" onclick="openCashOutModal()" disabled>Request reward 💵</button>
             </div>
 
             <div class="progress-bar-container">
@@ -253,16 +253,16 @@
         </div>
     </div>
     <div id="tasks-modal" class="modal-overlay hidden"><div class="modal dashboard"><h2>🎯 Daily tasks</h2><div id="daily-missions"></div><p id="badge-notice" aria-live="polite"></p><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
-    <div id="game-menu-modal" class="modal-overlay hidden"><div class="modal"><h2>Game options</h2><button class="modal-btn btn-parent-action" onclick="AndroidGame.checkUpdates()">Check for updates</button><button class="modal-btn btn-parent-action" onclick="AndroidGame.exportDiagnostics()">Export error report</button><button class="modal-btn btn-parent-action" onclick="exportBackup()">Export progress backup</button><small>Math Quest <span id="native-version">1.0.0</span> • Progress stays on this device</small><p id="reward-rule-summary"></p><div id="sync-status"></div><button class="modal-btn btn-parent-action" onclick="closeModals();toggleReview()" id="review-toggle">Review weak skills</button><button class="modal-btn btn-parent-action" onclick="closeModals();showRequests(false)">Reward requests</button><button class="modal-btn btn-parent-action" onclick="closeModals();openParentPanel()">Parent controls</button><button class="modal-btn btn-parent-action" onclick="logout()">Switch player / mode</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
+    <div id="game-menu-modal" class="modal-overlay hidden"><div class="modal"><h2>Game options</h2><button class="modal-btn btn-parent-action" id="update-button" onclick="AndroidGame.checkUpdates()">Check for updates</button><button class="modal-btn btn-parent-action" onclick="AndroidGame.exportDiagnostics()">Export error report</button><button class="modal-btn btn-parent-action" onclick="showPrivacy()">Privacy &amp; family rewards</button><button class="modal-btn btn-parent-action" onclick="exportBackup()">Export progress backup</button><small>Math Quest <span id="native-version">1.0.0</span> • Progress stays on this device</small><p id="reward-rule-summary"></p><div id="sync-status"></div><button class="modal-btn btn-parent-action" onclick="closeModals();toggleReview()" id="review-toggle">Review weak skills</button><button class="modal-btn btn-parent-action" onclick="closeModals();showRequests(false)">Reward requests</button><button class="modal-btn btn-parent-action" onclick="closeModals();openParentPanel()">Parent controls</button><button class="modal-btn btn-parent-action" onclick="logout()">Switch player / mode</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back to game</button></div></div>
 
     <!-- Cash Out Modal -->
     <div id="cashout-modal" class="modal-overlay hidden">
         <div class="modal">
-            <h2>Cash Out 💵</h2>
+            <h2>Request reward 💵</h2>
             <p>You have $<span id="modal-available">0</span> available.</p>
             <label for="reward-type">Reward type</label><select id="reward-type" class="op-select" onchange="refreshCashoutFields()"><option value="cash">Cash</option><option value="robux">Robux</option></select>
             <p id="cash-amount-label">Cash reward amount in whole dollars:</p><label id="pack-label" for="robux-package">Choose a Robux package</label><select id="robux-package" class="op-select"></select>
-            <p id="cashout-rule"></p><p>A request reserves this balance and opens an email draft. You must press Send in your email app.</p>
+            <p id="cashout-rule"></p><p>Rewards are supplied and approved by your parent, not MathQuest or Roblox. Buying this app does not include money or Robux. A request reserves this balance and opens an email draft. You must press Send in your email app.</p>
             <input type="number" id="cashout-amount" min="1" step="1" placeholder="Enter amount">
             <div class="modal-btns">
                 <button class="modal-btn btn-cancel" onclick="closeModals()">Cancel</button>
@@ -337,6 +337,7 @@
     .playing .header-controls{margin-bottom:8px}.playing #parent-btn,.playing #switch-user-btn{display:none}.playing .stats-board{padding:10px;margin-bottom:10px}.playing .stats-top{margin-bottom:5px}.playing .robux-text{display:none}.playing #cashout-btn{padding:7px 10px;font-size:.85em}.playing .progress-bar-container{height:8px;margin-bottom:10px}.playing #session-label{font-size:.8em;margin:8px 0;color:var(--q-color)}
     #quiz-block{padding:8px 0 12px}.playing .question{font-size:clamp(2.4rem,9vw,3.6rem);margin:10px 0 20px;line-height:1.15}.game-tools{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;border-top:1px solid var(--q-color);padding-top:12px;margin-top:12px}.game-tools button{margin:0;font-size:.8em;padding:10px 4px}.playing #message{font-size:1em;min-height:0;margin:6px 0}.playing #typed-form{margin:0}.playing #typed-answer{box-sizing:border-box;width:100%;font-size:1.5em;margin:10px 0}.playing #typed-submit{margin:0}.playing #next-btn{font-size:1.15em;padding:12px}.playing .option-btn{font-size:1.8em;padding:17px 10px}
     </style>
+    <div id="privacy-modal" class="modal-overlay hidden"><div class="modal"><h2>Privacy &amp; family rewards</h2><p>We never send promotional emails.</p><p>This version saves player names, learning progress, reward rules, requests and parent email addresses on this device. Online accounts and cloud syncing are not enabled yet. Use nicknames rather than children's full names.</p><p>Reward emails open in your email app and are sent only when you press Send. Parents supply all rewards. MathQuest does not pay cash, supply Robux, or have an affiliation with Roblox.</p><p>The GitHub edition contacts GitHub to check for and download updates. The Play edition uses Google Play for updates. Those services receive normal network information such as your IP address. Diagnostics stay on your device unless you export and share them.</p><p>Backups include parent email addresses and the device PIN. Keep them private. There are no ads or advertising analytics in this app.</p><button class="modal-btn btn-parent-action" onclick="eraseDeviceData()">Parent: erase this device's progress</button><button class="modal-btn btn-cancel" onclick="closeModals()">Back</button></div></div>
     <div id="recovery-modal" class="modal-overlay hidden"><div class="modal"><h2>Let’s get you playing again</h2><p id="recovery-text">Something interrupted the game. Your last saved progress has not been erased.</p><button class="modal-btn btn-confirm" onclick="location.reload()">Reload saved game</button><button class="modal-btn btn-cancel" onclick="AndroidGame.exportDiagnostics()">Save error report</button></div></div>
     <script>
         function recordFault(code){try{if(window.AndroidGame)AndroidGame.recordError(code);}catch(ignore){}}
@@ -657,7 +658,7 @@
         }
 
         function closeModals() {
-            ['cashout-modal','parent-modal','requests-modal','dashboard-modal','badges-modal','tasks-modal','game-menu-modal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+            ['cashout-modal','parent-modal','requests-modal','dashboard-modal','badges-modal','tasks-modal','game-menu-modal','privacy-modal'].forEach(id=>document.getElementById(id).classList.add('hidden'));
             parentAuthorized=false;
         }
         function openCashOutModal() {
@@ -889,12 +890,19 @@
             const scene=document.getElementById('theme-scene');scene.replaceChildren();
             for(let i=0;i<12;i++){const item=document.createElement('span');item.textContent=i%4===0?friend:speck;item.style.left=(i*37%100)+'%';item.style.top=(i*23%100)+'%';item.style.animationDelay=-(i*1.7)+'s';item.style.fontSize=(18+i%3*12)+'px';scene.append(item);}
         }
+        function showPrivacy(){closeModals();document.getElementById('privacy-modal').classList.remove('hidden');}
+        function eraseDeviceData(){
+            if(!authorizeParent())return;
+            if(!confirm('Erase ALL player profiles, progress, parent emails and reward requests on this device? Export a backup first if you want to keep them. This cannot be undone.'))return;
+            const previous=db;db=freshDB();if(persist()){logout();alert('Device progress erased. Exported backup files are not deleted.');}else{db=previous;}
+        }
         function showTasks(){renderLearning();document.getElementById('tasks-modal').classList.remove('hidden');}
         function openGameMenu(){document.getElementById('game-menu-modal').classList.remove('hidden');}
         document.getElementById('typed-submit').addEventListener('click',submitTypedAnswer);
         document.getElementById('typed-form').addEventListener('submit',event=>{event.preventDefault();submitTypedAnswer();});
         document.getElementById('typed-answer').addEventListener('keydown',event=>{if(event.key==='Enter'&&!event.isComposing){event.preventDefault();submitTypedAnswer();}});
         window.onload = () => {
+            if(window.AndroidGame && typeof AndroidGame.distribution==='function' && AndroidGame.distribution()==='play')document.getElementById('update-button').textContent='Updates in Google Play';
             if(window.AndroidGame && typeof AndroidGame.versionName==='function')document.getElementById('native-version').textContent=AndroidGame.versionName();
             try {readDB();const probe=STORE_KEY+'-probe';localStorage.setItem(probe,'1');localStorage.removeItem(probe);initTheme();renderProfiles();}
             catch(e) {recordFault('LOAD_ERROR');storageFailed=true;document.getElementById('login-status').innerText='Local saving is unavailable or data is damaged. Use a regular browser with storage enabled. Existing data has not been overwritten.';document.getElementById('btn-login-text').disabled=true;}

@@ -3,14 +3,19 @@ def appVersion = new Properties()
 rootProject.file('version.properties').withInputStream { appVersion.load(it) }
 android {
     namespace 'com.cpaul.mathquest'
-    compileSdk 35
+    compileSdk 36
     defaultConfig {
         applicationId 'com.cpaul.mathquest'
         minSdk 26
-        targetSdk 35
+        targetSdk 36
         versionCode appVersion.getProperty('versionCode').toInteger()
         versionName appVersion.getProperty('versionName')
         buildConfigField 'String', 'UPDATE_REPO', '"cpaul1988/MathQuest"'
+    }
+    flavorDimensions "distribution"
+    productFlavors {
+        github { dimension "distribution" }
+        play { dimension "distribution" }
     }
     buildFeatures { buildConfig true }
     signingConfigs {

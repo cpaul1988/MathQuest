@@ -1,5 +1,7 @@
 # Math Quest for Android
 
+Current channel: **GitHub**. Google Play preparation is underway; this is not yet a store release. See [Play readiness](docs/PLAY-READINESS.md) and [privacy information](docs/PRIVACY.md). Online accounts and cloud syncing are not enabled in 1.0.1.
+
 Offline family math game. Based on the v13 game; local profiles, streak-based rewards, Easy multiple choice / Hard typed answers, weak-fact review, missions, badges, seasonal worlds and parent reward requests. This is an independent family game, not affiliated with Roblox. Parents supply rewards manually.
 
 ## Install and keep progress
@@ -51,9 +53,9 @@ The default repository is wired into `app/build.gradle` and `scripts/make_manife
 
 ## Local build
 
-Use JDK 17, Android SDK platform/build-tools 35, and Gradle 8.11.1. Set `ANDROID_HOME`. Run `gradle assembleDebug` for a development APK. Development APKs are **not** update-compatible with the release APK.
+Use JDK 17, Android SDK platform 36 / build-tools 35.0.0, and Gradle 8.11.1. Set `ANDROID_HOME`. Run `gradle assembleDebug` for a development APK. Development APKs are **not** update-compatible with the release APK.
 
-For release builds set `MQ_KEYSTORE` (absolute key path), `MQ_STORE_PASSWORD`, and `MQ_KEY_PASSWORD` in your local environment, then run `gradle assembleRelease lintRelease`. Key alias: `mathquest`. Do not commit credentials or `local.properties`.
+For release builds set `MQ_KEYSTORE` (absolute key path), `MQ_STORE_PASSWORD`, and `MQ_KEY_PASSWORD` in your local environment, then run `gradle assembleGithubRelease bundlePlayRelease lintGithubRelease lintPlayRelease`. Key alias: `mathquest`. Do not commit credentials or `local.properties`.
 
 Run `npm ci && npm test` for game regressions (Node 22.22.2+, 24.15+, or 26+). Native installation, file selection, email handoff and installer approval still require an Android-device smoke test.
 

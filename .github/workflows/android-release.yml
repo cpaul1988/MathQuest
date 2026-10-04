@@ -19,7 +19,7 @@ jobs:
           java-version: '17'
       - uses: android-actions/setup-android@v3
         with:
-          packages: 'platform-tools platforms;android-35 build-tools;35.0.0'
+          packages: 'platform-tools platforms;android-36 build-tools;35.0.0'
           log-accepted-android-sdk-licenses: false
       - uses: gradle/actions/setup-gradle@v4
         with:
@@ -52,20 +52,28 @@ jobs:
           MQ_KEYSTORE: ${{ runner.temp }}/mathquest.jks
           MQ_STORE_PASSWORD: ${{ secrets.MQ_STORE_PASSWORD }}
           MQ_KEY_PASSWORD: ${{ secrets.MQ_KEY_PASSWORD }}
-        run: gradle assembleRelease lintRelease --console=plain
+        run: gradle assembleGithubRelease bundlePlayRelease lintGithubRelease lintPlayRelease --console=plain
+      - name: Check distribution boundaries
+        if: steps.version.outputs.exists != 'true'
+        run: python3 scripts/check-distributions.py
       - name: Prepare verified release
         if: steps.version.outputs.exists != 'true'
         env:
           GH_REPO: ${{ github.repository }}
         run: |
           mkdir -p release
-          cp app/build/outputs/apk/release/app-release.apk release/MathQuest.apk
+          cp app/build/outputs/apk/github/release/app-github-release.apk release/MathQuest.apk
           python3 scripts/make_manifest.py
       - uses: actions/upload-artifact@v4
         if: steps.version.outputs.exists != 'true'
         with:
           name: MathQuest-signed-release
           path: release/
+      - uses: actions/upload-artifact@v4
+        if: steps.version.outputs.exists != 'true'
+        with:
+          name: MathQuest-Play-candidate-not-for-submission
+          path: app/build/outputs/bundle/playRelease/*.aab
       - name: Publish release
         if: steps.version.outputs.exists != 'true'
         env:
