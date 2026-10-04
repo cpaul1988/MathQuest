@@ -1,3 +1,10 @@
+MathQuest 1.3.1 — guided introduction and reward setup
+
+- Add a skippable, replayable first-run tutorial with an interactive practice question.
+- Explain navigation, hints, retries, currency earning, reward costs and manual cloud backups.
+- Hand off to guided reward setup with step-by-step help; never apply rewards automatically.
+- Remember tutorial completion or dismissal per device.
+
 MathQuest 1.3.0 — modern app experience
 
 - Home, bottom navigation and profile/settings sheet with clear local/manual-cloud save status.
