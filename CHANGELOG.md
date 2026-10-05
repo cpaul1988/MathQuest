@@ -1,3 +1,11 @@
+## 1.5.0 — Simple streak rewards
+
+- One-screen reward setup: amount, correct answers in a row and Save.
+- Robux, cash, Minecoins pack progress, screen time and custom rewards.
+- Optional difficulty, operation and daily dollar limit; earned balances and earlier history preserved.
+- Child-facing reward progress, custom earned history, Minecoins reservation/refund and manual parent email drafts.
+- Updated tutorial. Parent PIN remains disabled during testing.
+
 MathQuest 1.4.0 — learning and feedback
 
 - Add a skippable starting skill check and parent-adjustable practice levels.
