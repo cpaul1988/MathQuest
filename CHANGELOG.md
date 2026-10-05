@@ -1,3 +1,12 @@
+## 1.6.0 — Play first
+
+- Open straight into the remembered player’s game; three tabs: Play, Rewards, Progress.
+- Compact Sign in / Settings top bar replaces the always-visible account card.
+- Google-branded sign-in button opens the native Google chooser directly; parent notice is on the sign-in page.
+- Missions, badges, adventure and skill check live under Progress. Themes, tutorial, backups and account tools stay in Settings.
+- Earlier reward shop and history are tucked away; normal setup stays focused on reward, amount and streak.
+- Existing player data, balances and requests are preserved; PIN remains disabled while testing.
+
 ## 1.5.0 — Simple streak rewards
 
 - One-screen reward setup: amount, correct answers in a row and Save.
