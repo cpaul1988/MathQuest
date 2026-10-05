@@ -65,9 +65,9 @@ final class ParentAccount {
         message("Google sign-in unavailable",text);
     }
     private void googleNotice(){
-        CheckBox notice=new CheckBox(activity);notice.setText("I am the parent/adult account holder. Google shares my basic profile and email with Firebase for sign-in. Cloud progress uploads require separate confirmation. No promotional emails.");notice.setPadding(24,16,24,16);
-        AlertDialog dialog=new AlertDialog.Builder(activity).setTitle("Continue with Google").setView(notice).setNegativeButton("Cancel",null).setPositiveButton("Continue",null).create();
-        dialog.setOnShowListener(d->dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(v->{if(!notice.isChecked()){notice.setError("Please confirm the parent notice.");return;}dialog.dismiss();busy=true;google.request(credential->{if(!live()){busy=false;return;}auth.signInWithCredential(credential).addOnSuccessListener(r->{busy=false;emit("signedIn",r.getUser().getUid(),0,"");message("Signed in with Google","Your player profiles remain on this device. Use Parent account to Save or Restore cloud progress.");}).addOnFailureListener(this::googleFailure);},this::googleFailure);}));dialog.show();
+        if(busy||!live())return;
+        busy=true;
+        google.request(credential->{if(!live()){busy=false;return;}auth.signInWithCredential(credential).addOnSuccessListener(r->{busy=false;emit("signedIn",r.getUser().getUid(),0,"");}).addOnFailureListener(this::googleFailure);},this::googleFailure);
     }
     private void googleLink(FirebaseUser user){
         new AlertDialog.Builder(activity).setTitle("Link Google sign-in?").setMessage("Choose your Google account to add it as a sign-in method for this parent account. Your account ID and cloud save stay the same.").setNegativeButton("Cancel",null).setPositiveButton("Choose Google account",(d,w)->{busy=true;google.request(c->{if(!live()){busy=false;return;}user.linkWithCredential(c).addOnSuccessListener(r->{busy=false;message("Google linked","You can now use Google to sign into this same parent account.");}).addOnFailureListener(this::googleFailure);},this::googleFailure);}).show();
